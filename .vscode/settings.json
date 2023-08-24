@@ -1,0 +1,5 @@
+{
+  "python.analysis.typeCheckingMode": "basic",
+  "css.format.enable": false,
+  "css.format.spaceAroundSelectorSeparator": true
+}
