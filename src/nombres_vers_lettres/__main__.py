@@ -111,7 +111,11 @@ def main():
 
     # if args.config:
     # print(args)
-    print(float_to_letters(args.number, use_tiret=args.use_tiret))
+    print(
+        float_to_letters(
+            args.number, post_1990_orthograph=args.post_1990_orthograph
+        )
+    )
 
 
 if __name__ == "__main__":

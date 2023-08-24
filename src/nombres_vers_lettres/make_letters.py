@@ -1,11 +1,18 @@
 # -*- coding: utf-8 -*-
-"""This modules aims to convert numbers to letters in French."""
+"""This modules aims to convert numbers to letters in French.
+
+Interesting links:
+
+https://fr.wikipedia.org/wiki/Noms_des_grands_nombres
+https://fr.wikipedia.org/wiki/Nombres_en_fran%C3%A7ais
+"""
 import re
 
 from nombres_vers_lettres.constants import (
     BIG_NUMBERS_BY_RANK,
-    SPECIAL_NUMBERS,
-    TENS,
+    CURRENCY_FORMS_FR,
+    LANGUAGES_TENS,
+    NUMBERS,
     VALID_FEMININE,
     VALID_MASCULINE,
 )
@@ -13,6 +20,34 @@ from nombres_vers_lettres.constants import (
 # TODO: Add support for France's "soixante-dix" and "quatre-vingt-dix"
 # TODO: Add support for "-"" or " " syntax
 # TODO: Check ordinal/cardinal numbers
+
+
+def make_currency(
+    number: float | int | str,
+    currency: str = "EUR",
+    decimal_rank: bool = True,
+    post_1990_orthographe: bool = True,
+) -> str:
+    """Convert a number to a currency.
+
+    Args:
+        number (float | int | str): The number to convert.
+        currency (str, optional): Defaults to "EUR".
+        decimal_rank (bool, optional): Defaults to True.
+        post_1990_orthographe (bool, optional): Defaults to False.
+
+    Returns:
+        str: _description_
+    """
+    return (
+        float_to_letters(
+            number,
+            decimal_rank=decimal_rank,
+            post_1990_orthographe=post_1990_orthographe,
+        )
+        + " "
+        + CURRENCY_FORMS_FR[currency]
+    )
 
 
 def big_number_from_rank(rank: int) -> str:
@@ -103,7 +138,7 @@ def make_ordinal(
 
 
 def positive_integer_under_one_hundred(
-    number: int, cardinal: bool = False, use_tiret: bool = False
+    number: int, cardinal: bool = False, post_1990_orthographe: bool = False
 ) -> str:
     """Convert a integer between 0 and under 100 to letters.
 
@@ -111,7 +146,7 @@ def positive_integer_under_one_hundred(
         number (int): The number to convert.
         cardinal (bool, optional): If True, use cardinal numbers.
         Defaults to False.
-        use_tiret (bool, optional): If True, use tiret with "et".
+        post_1990_orthographe (bool, optional): If True, use tiret with "et".
         Defaults to False.
 
     Raises:
@@ -127,8 +162,8 @@ def positive_integer_under_one_hundred(
         )
 
     # Directly lookup special numbers (0-19)
-    if number in SPECIAL_NUMBERS:
-        return SPECIAL_NUMBERS[number]
+    if number in NUMBERS:
+        return NUMBERS[number]
 
     # 80 is a special case
     if number == 80 and cardinal is False:
@@ -142,16 +177,16 @@ def positive_integer_under_one_hundred(
         if number == 81:
             return "quatre-vingt-un"
 
-        if use_tiret:
+        if post_1990_orthographe:
             return TENS[number - 1] + "-et-un"
 
         return TENS[number - 1] + " et un"
 
-    return TENS[number - number % 10] + "-" + SPECIAL_NUMBERS[number % 10]
+    return TENS[number - number % 10] + "-" + NUMBERS[number % 10]
 
 
 def positive_integer_under_one_thousand(
-    number: int, cardinal: bool = False, use_tiret: bool = False
+    number: int, cardinal: bool = False, post_1990_orthographe: bool = False
 ) -> str:
     """Convert a integer between 0 and under 1000 to letters.
 
@@ -159,13 +194,13 @@ def positive_integer_under_one_thousand(
         number (int): The number to convert.
         cardinal (bool, optional): If True, use cardinal numbers.
         Defaults to False.
-        use_tiret (bool, optional): If True, use tiret with "et", etc.
+        post_1990_orthographe (bool, optional): If True, use tiret with "et", etc.
         Defaults to False.
 
     Raises:
         ValueError: If the number is over 999.
     """
-    space = " " if not use_tiret else "-"
+    space = " " if not post_1990_orthographe else "-"
 
     if number >= 1000:
         raise ValueError(f"Number must be under 1000 (received {number})")
@@ -178,7 +213,9 @@ def positive_integer_under_one_thousand(
 
     if number < 100:
         return positive_integer_under_one_hundred(
-            number, cardinal=cardinal, use_tiret=use_tiret
+            number,
+            cardinal=cardinal,
+            post_1990_orthographe=post_1990_orthographe,
         )
 
     if number == 100:
@@ -187,7 +224,9 @@ def positive_integer_under_one_thousand(
     # Form numbers over 100
     # Form the part under 100 (xx)
     under_hundred_part_str = positive_integer_under_one_hundred(
-        number % 100, cardinal=cardinal, use_tiret=use_tiret
+        number % 100,
+        cardinal=cardinal,
+        post_1990_orthographe=post_1990_orthographe,
     )
     under_hundred_part_str = (
         space + under_hundred_part_str if number % 100 != 0 else ""
@@ -197,7 +236,9 @@ def positive_integer_under_one_thousand(
     hundreds_part = (number - (number % 100)) // 100
     hundreds_part_str = (
         positive_integer_under_one_hundred(
-            hundreds_part, cardinal=cardinal, use_tiret=use_tiret
+            hundreds_part,
+            cardinal=cardinal,
+            post_1990_orthographe=post_1990_orthographe,
         )
         + space
     )
@@ -217,7 +258,7 @@ def integer_to_letters(
     decimal: bool = False,
     decimal_rank: bool = True,
     cardinal: bool = False,
-    use_tiret: bool = False,
+    post_1990_orthographe: bool = False,
 ) -> str:
     """Convert an integer to letters.
 
@@ -229,7 +270,7 @@ def integer_to_letters(
         low ranks. Defaults to True.
         cardinal (bool, optional): If True, use cardinal numbers.
         Defaults to False.
-        use_tiret (bool, optional): If True, use tiret with "et", etc.
+        post_1990_orthographe (bool, optional): If True, use tiret with "et", etc.
         Defaults to False.
 
     Raises:
@@ -253,7 +294,9 @@ def integer_to_letters(
         return "moins " + integer_to_letters(-number)
 
     if number < 1000 and not decimal:
-        return positive_integer_under_one_thousand(number, use_tiret=use_tiret)
+        return positive_integer_under_one_thousand(
+            number, post_1990_orthographe=post_1990_orthographe
+        )
 
     # Divide number in groups of 3 digits
     # Convert number to string (remove scientific notation)
@@ -300,7 +343,7 @@ def integer_to_letters(
             continue
 
         # Add a space between groups
-        space = " " if not use_tiret else "-"
+        space = " " if not post_1990_orthographe else "-"
         if number_str != "":
             number_str += space
 
@@ -330,7 +373,9 @@ def integer_to_letters(
 
         else:
             group_str = positive_integer_under_one_thousand(
-                int(group), cardinal=use_cardinals, use_tiret=use_tiret
+                int(group),
+                cardinal=use_cardinals,
+                post_1990_orthographe=post_1990_orthographe,
             )
             group_str += space if rank_str != "" else ""
 
@@ -342,7 +387,7 @@ def integer_to_letters(
 def float_to_letters(
     number: float | int | str,
     decimal_rank: bool = True,
-    use_tiret: bool = False,
+    post_1990_orthographe: bool = False,
 ) -> str:
     """Convert a float to letters.
 
@@ -381,7 +426,9 @@ def float_to_letters(
 
     if number % 1 == 0 and exact_number == "":
         return integer_to_letters(
-            int(number), decimal_rank=decimal_rank, use_tiret=use_tiret
+            int(number),
+            decimal_rank=decimal_rank,
+            post_1990_orthographe=post_1990_orthographe,
         )
 
     # Check if the number is negative
@@ -390,7 +437,9 @@ def float_to_letters(
             exact_number = exact_number.replace("-", "")
             number = exact_number
         return "moins " + float_to_letters(
-            number, decimal_rank=decimal_rank, use_tiret=use_tiret
+            number,
+            decimal_rank=decimal_rank,
+            post_1990_orthographe=post_1990_orthographe,
         )
 
     number_str = f"{number}".split(".")
@@ -402,18 +451,24 @@ def float_to_letters(
 
     if len(number_str) == 1:
         return integer_to_letters(
-            integer_part, decimal_rank=decimal_rank, use_tiret=use_tiret
+            integer_part,
+            decimal_rank=decimal_rank,
+            post_1990_orthographe=post_1990_orthographe,
         )
 
     decimal_part = number_str[1]
 
     return (
-        integer_to_letters(integer_part, cardinal=True, use_tiret=use_tiret)
+        integer_to_letters(
+            integer_part,
+            cardinal=True,
+            post_1990_orthographe=post_1990_orthographe,
+        )
         + " virgule "
         + integer_to_letters(
             decimal_part,
             decimal=True,
             decimal_rank=decimal_rank,
-            use_tiret=use_tiret,
+            post_1990_orthographe=post_1990_orthographe,
         )
     )
