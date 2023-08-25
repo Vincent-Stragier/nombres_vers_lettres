@@ -89,7 +89,7 @@ def main():
     )
 
     parser.add_argument(
-        "--use-tiret",
+        "--post_1990_orthographe",
         "-t",
         action="store_true",
         help="Use the tiret character everywhere (e.g. 'vingt-et-un')",
@@ -113,7 +113,7 @@ def main():
     # print(args)
     print(
         float_to_letters(
-            args.number, post_1990_orthograph=args.post_1990_orthograph
+            args.number, post_1990_orthographe=args.post_1990_orthographe
         )
     )
 

@@ -2,7 +2,7 @@
 """Constants used in the application."""
 
 CURRENCY_FORMS_FR = {
-    "EUR": (("euro", "euros"), ("centime", "centimes")),
+    "EUR": (("euro", "euros"), ("cent", "cents")),
     "USD": (("dollar", "dollars"), ("cent", "cents")),
     "FRF": (("franc", "francs"), ("centime", "centimes")),
     "GBP": (("livre", "livres"), ("penny", "pence")),
@@ -88,7 +88,7 @@ NUMBERS = {
 
 # Belgium French
 # Democratic Republic of the Congo French
-TENS = {
+DECADES = {
     10: "dix",
     20: "vingt",
     30: "trente",
@@ -103,25 +103,27 @@ TENS = {
 
 # France French
 # Canada French
-TENS_FR = {
+DECADES_FR = {
     70: "soixante-dix",
     90: "quatre-vingt-dix",
 }
-TENS_FR = TENS | TENS_FR
+DECADES_FR = DECADES | DECADES_FR
 
 # Swiss French
 # Aosta Valley French
-TENS_CH = {80: "huitante"}
-TENS_CH = TENS_FR | TENS_CH
+DECADES_CH = {80: "huitante"}
+DECADES_CH = DECADES_FR | DECADES_CH
 
-LANGUAGES_TENS = {
-    "fr_BE": TENS,
-    "fr_CD": TENS,
-    "fr_FR": TENS_FR,
-    "fr_CA": TENS_FR,
-    "fr_CH": TENS_CH,
-    "fr_IT": TENS_CH,
+LANGUAGES_DECADES = {
+    "fr_BE": DECADES,
+    "fr_CD": DECADES,
+    "fr_FR": DECADES_FR,
+    "fr_CA": DECADES_FR,
+    "fr_CH": DECADES_CH,
+    "fr_IT": DECADES_CH,
 }
+
+FRENCH_FRENCH_LIKE = ("fr_FR", "fr_CA")
 
 # Long and short scales
 # Échelle longue (-illion) et échelle courte (-illiard)

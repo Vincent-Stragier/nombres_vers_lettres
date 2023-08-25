@@ -7,11 +7,13 @@ https://fr.wikipedia.org/wiki/Noms_des_grands_nombres
 https://fr.wikipedia.org/wiki/Nombres_en_fran%C3%A7ais
 """
 import re
+import traceback
 
 from nombres_vers_lettres.constants import (
     BIG_NUMBERS_BY_RANK,
     CURRENCY_FORMS_FR,
-    LANGUAGES_TENS,
+    FRENCH_FRENCH_LIKE,
+    LANGUAGES_DECADES,
     NUMBERS,
     VALID_FEMININE,
     VALID_MASCULINE,
@@ -27,6 +29,7 @@ def make_currency(
     currency: str = "EUR",
     decimal_rank: bool = True,
     post_1990_orthographe: bool = True,
+    language: str = "fr_BE",
 ) -> str:
     """Convert a number to a currency.
 
@@ -44,6 +47,7 @@ def make_currency(
             number,
             decimal_rank=decimal_rank,
             post_1990_orthographe=post_1990_orthographe,
+            language=language,
         )
         + " "
         + CURRENCY_FORMS_FR[currency]
@@ -65,7 +69,13 @@ def big_number_from_rank(rank: int) -> str:
     if rank < 0:
         raise ValueError(f"Number must be positive (received {rank})")
 
-    return BIG_NUMBERS_BY_RANK.get(rank, "ERROR_NO_RANK_FOUND")
+    try:
+        return BIG_NUMBERS_BY_RANK[rank]
+    except KeyError as exception:
+        traceback.print_exc()
+        raise ValueError(
+            f"Rank value ({rank = }) out of range."
+        ) from exception
 
 
 def decimal_from_rank(rank: int) -> str:
@@ -117,19 +127,19 @@ def make_ordinal(
             return "premier" if not plural else "premiers"
 
     ordinal_number_str = cardinal_number_str
+    suffix = "ième"
+    if plural:
+        suffix += "s"
+
     match cardinal_number_str[-1]:
         case "q":
-            ordinal_number_str += "uième" + ("" if not plural else "s")
+            ordinal_number_str += "u" + suffix
         case "s":
-            return (
-                cardinal_number_str[:-1] + "ième" + ("" if not plural else "s")
-            )
+            return cardinal_number_str[:-1] + suffix
         case "e":
-            return (
-                cardinal_number_str[:-1] + "ième" + ("" if not plural else "s")
-            )
+            return cardinal_number_str[:-1] + suffix
         case _:
-            ordinal_number_str += "ième" + ("" if not plural else "s")
+            ordinal_number_str += suffix
 
     return ordinal_number_str
 
@@ -138,7 +148,10 @@ def make_ordinal(
 
 
 def positive_integer_under_one_hundred(
-    number: int, cardinal: bool = False, post_1990_orthographe: bool = False
+    number: int,
+    cardinal: bool = False,
+    post_1990_orthographe: bool = False,
+    language: str = "fr_BE",
 ) -> str:
     """Convert a integer between 0 and under 100 to letters.
 
@@ -161,32 +174,54 @@ def positive_integer_under_one_hundred(
             f"(received {number}, type {type(number)})"
         )
 
-    # Directly lookup special numbers (0-19)
-    if number in NUMBERS:
-        return NUMBERS[number]
-
-    # 80 is a special case
+    # 80 is a special case (4 time 20)
+    decades = LANGUAGES_DECADES[language]
     if number == 80 and cardinal is False:
-        return "quatre-vingts"
+        return decades[number] + ("s" if decades[number] else "")
 
-    # Directly lookup tens
-    if number in TENS:
-        return TENS[number]
+    # Directly lookup decades
+    if number in (NUMBERS | decades):
+        return (NUMBERS | decades).get(number, "")
+
+    # # Directly lookup special numbers (0-16)
+    # if number in NUMBERS:
+    #     return NUMBERS[number]
+
+    if language in FRENCH_FRENCH_LIKE:
+        if 71 < number < 80:
+            return "soixante-" + positive_integer_under_one_hundred(
+                number - 60
+            )
+
+        if 90 < number < 100:
+            return "quatre-vingt-" + positive_integer_under_one_hundred(
+                number - 80
+            )
+
+        if number == 71:
+            return (
+                "soixante-et-onze"
+                if post_1990_orthographe
+                else "soixante et onze"
+            )
 
     if number % 10 == 1:
-        if number == 81:
+        if number == 81 and decades[80] == "quatre-vingt":
             return "quatre-vingt-un"
 
         if post_1990_orthographe:
-            return TENS[number - 1] + "-et-un"
+            return decades[number - 1] + "-et-un"
 
-        return TENS[number - 1] + " et un"
+        return decades[number - 1] + " et un"
 
-    return TENS[number - number % 10] + "-" + NUMBERS[number % 10]
+    return decades[number - number % 10] + "-" + NUMBERS[number % 10]
 
 
 def positive_integer_under_one_thousand(
-    number: int, cardinal: bool = False, post_1990_orthographe: bool = False
+    number: int,
+    cardinal: bool = False,
+    post_1990_orthographe: bool = False,
+    language: str = "fr_BE",
 ) -> str:
     """Convert a integer between 0 and under 1000 to letters.
 
@@ -194,7 +229,8 @@ def positive_integer_under_one_thousand(
         number (int): The number to convert.
         cardinal (bool, optional): If True, use cardinal numbers.
         Defaults to False.
-        post_1990_orthographe (bool, optional): If True, use tiret with "et", etc.
+        post_1990_orthographe (bool, optional): If True, use tiret with "et",
+        etc.
         Defaults to False.
 
     Raises:
@@ -216,6 +252,7 @@ def positive_integer_under_one_thousand(
             number,
             cardinal=cardinal,
             post_1990_orthographe=post_1990_orthographe,
+            language=language,
         )
 
     if number == 100:
@@ -227,6 +264,7 @@ def positive_integer_under_one_thousand(
         number % 100,
         cardinal=cardinal,
         post_1990_orthographe=post_1990_orthographe,
+        language=language,
     )
     under_hundred_part_str = (
         space + under_hundred_part_str if number % 100 != 0 else ""
@@ -239,6 +277,7 @@ def positive_integer_under_one_thousand(
             hundreds_part,
             cardinal=cardinal,
             post_1990_orthographe=post_1990_orthographe,
+            language=language,
         )
         + space
     )
@@ -259,6 +298,7 @@ def integer_to_letters(
     decimal_rank: bool = True,
     cardinal: bool = False,
     post_1990_orthographe: bool = False,
+    language: str = "fr_BE",
 ) -> str:
     """Convert an integer to letters.
 
@@ -270,7 +310,8 @@ def integer_to_letters(
         low ranks. Defaults to True.
         cardinal (bool, optional): If True, use cardinal numbers.
         Defaults to False.
-        post_1990_orthographe (bool, optional): If True, use tiret with "et", etc.
+        post_1990_orthographe (bool, optional): If True, use tiret with "et",
+        etc.
         Defaults to False.
 
     Raises:
@@ -295,7 +336,9 @@ def integer_to_letters(
 
     if number < 1000 and not decimal:
         return positive_integer_under_one_thousand(
-            number, post_1990_orthographe=post_1990_orthographe
+            number,
+            post_1990_orthographe=post_1990_orthographe,
+            language=language,
         )
 
     # Divide number in groups of 3 digits
@@ -376,6 +419,7 @@ def integer_to_letters(
                 int(group),
                 cardinal=use_cardinals,
                 post_1990_orthographe=post_1990_orthographe,
+                language=language,
             )
             group_str += space if rank_str != "" else ""
 
@@ -388,6 +432,7 @@ def float_to_letters(
     number: float | int | str,
     decimal_rank: bool = True,
     post_1990_orthographe: bool = False,
+    language: str = "fr_BE",
 ) -> str:
     """Convert a float to letters.
 
@@ -399,6 +444,7 @@ def float_to_letters(
     Returns:
         str: The number in letters.
     """
+    # If the number is a string there is not conversion error
     exact_number = ""
     if isinstance(number, str):
         exact_number = number
@@ -429,6 +475,7 @@ def float_to_letters(
             int(number),
             decimal_rank=decimal_rank,
             post_1990_orthographe=post_1990_orthographe,
+            language=language,
         )
 
     # Check if the number is negative
@@ -440,6 +487,7 @@ def float_to_letters(
             number,
             decimal_rank=decimal_rank,
             post_1990_orthographe=post_1990_orthographe,
+            language=language,
         )
 
     number_str = f"{number}".split(".")
@@ -454,6 +502,7 @@ def float_to_letters(
             integer_part,
             decimal_rank=decimal_rank,
             post_1990_orthographe=post_1990_orthographe,
+            language=language,
         )
 
     decimal_part = number_str[1]
@@ -463,6 +512,7 @@ def float_to_letters(
             integer_part,
             cardinal=True,
             post_1990_orthographe=post_1990_orthographe,
+            language=language,
         )
         + " virgule "
         + integer_to_letters(
@@ -470,5 +520,63 @@ def float_to_letters(
             decimal=True,
             decimal_rank=decimal_rank,
             post_1990_orthographe=post_1990_orthographe,
+            language=language,
         )
     )
+
+
+def make_letters(
+    number: float | int | str,
+    mode: str = "nominal",
+    language: str = "fr_BE",
+    post_1990_orthographe: bool = False,
+) -> str:
+    """Convert a number to letters.
+
+    Args:
+        number (float | int | str): The number to convert.
+        mode (str, optional): The mode to use. Defaults to "nominal".
+        language (str, optional): The language to use. Defaults to "fr_BE".
+        post_1990_orthographe (bool, optional): If True, use tiret with "et",
+        etc.
+        Defaults to False.
+
+    Returns:
+        str: The number in letters.
+    """
+    if mode == "nominal":
+        return float_to_letters(
+            number,
+            decimal_rank=False,
+            post_1990_orthographe=post_1990_orthographe,
+            language=language,
+        )
+
+    if isinstance(number, float):
+        if number % 1 == 0:
+            number = int(number)
+        else:
+            raise ValueError(
+                "Invalid number: float number must be an integer "
+                f"(received {number}, type {type(number)})"
+            )
+
+    if mode == "cardinal":
+        return integer_to_letters(
+            number,
+            decimal_rank=True,
+            post_1990_orthographe=post_1990_orthographe,
+            language=language,
+        )
+
+    if mode == "ordinal":
+        return make_ordinal(
+            integer_to_letters(
+                number,
+                decimal_rank=True,
+                post_1990_orthographe=post_1990_orthographe,
+                language=language,
+            )
+        )
+
+    raise ValueError(f"Invalid mode {mode = }")
