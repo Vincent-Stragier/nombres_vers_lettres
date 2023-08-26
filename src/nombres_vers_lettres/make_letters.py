@@ -96,14 +96,14 @@ def decimal_from_rank(rank: int) -> str:
 
 def make_ordinal(
     cardinal_number_str: str,
-    gender: str = "male",
-    plural: bool | None = None,
+    gender: str = "masculin",
+    plural: bool = False,
 ) -> str:
     """Convert a cardinal number to an ordinal number.
 
     Args:
         cardinal_number_str (str): The cardinal number to convert.
-        gender (str): male or female (the gender of the ordinal number).
+        gender (str): masculine or feminine (the gender of the ordinal number).
         plural (bool): If True, the ordinal number will be plural.
 
     Returns:
@@ -126,7 +126,7 @@ def make_ordinal(
     ordinal_number_str = cardinal_number_str
     suffix = "ième"
 
-    if plural or plural:
+    if plural:
         suffix += "s"
 
     match cardinal_number_str[-1]:
@@ -326,7 +326,7 @@ def integer_to_letters(
 
     # Check if the number is negative
     if number < 0:
-        return "moins " + integer_to_letters(-number)
+        return "moins " + integer_to_letters(-number)
 
     # We already have a function for numbers under 1000
     if number < 1000 and not decimal:
@@ -482,7 +482,7 @@ def float_to_letters(
             number = exact_number
 
         # Recursively call the function
-        return "moins " + float_to_letters(
+        return "moins " + float_to_letters(
             number,
             decimal_rank=decimal_rank,
             post_1990_orthographe=post_1990_orthographe,
