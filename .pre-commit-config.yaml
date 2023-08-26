@@ -6,7 +6,7 @@
 # Run `pre-commit run --a` to run all hooks on all files
 
 # You may want to exclude some files using regex
-exclude: (?x)^(.*\/.vscode\/.*)$
+exclude: (?x)^(.*\/.vscode\/.*|.vscode\/settings.json)$
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
