@@ -92,6 +92,15 @@ repos:
 
   - repo: local
     hooks:
+      - id: mypy-check
+        name: mypy-check
+        entry: mypy .
+        language: system
+        pass_filenames: false
+        always_run: true
+
+  - repo: local
+    hooks:
       - id: coverage-check
         name: coverage-check (pytest)
         entry: coverage run -m pytest

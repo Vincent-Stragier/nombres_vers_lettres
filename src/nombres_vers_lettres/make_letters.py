@@ -111,8 +111,8 @@ def numbers(
     Returns:
         tuple[float | int, str]: The number as a float or int and a string.
     """
-    number_str = ""
-    number_int_or_float = 0
+    number_str: str = ""
+    number_int_or_float: int | float = 0
 
     if isinstance(number, str):
         number_str = number
