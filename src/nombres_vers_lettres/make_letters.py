@@ -11,6 +11,8 @@ import traceback
 
 from nombres_vers_lettres.constants import (  # CURRENCY_FORMS_FR,
     BIG_NUMBERS_BY_RANK,
+    CURRENCY_FORMS_FR,
+    CURRENCY_FORMS_FR_CODES,
     FRENCH_FRENCH_LIKE,
     LANGUAGES_DECADES,
     NUMBERS,
@@ -21,6 +23,7 @@ from nombres_vers_lettres.constants import (  # CURRENCY_FORMS_FR,
 # TODO: Check ordinal/cardinal numbers
 # TODO: Check masculine/feminine
 # TODO: Check plural
+
 
 # def make_currency(
 #     number: float | int | str,
@@ -40,16 +43,42 @@ from nombres_vers_lettres.constants import (  # CURRENCY_FORMS_FR,
 #     Returns:
 #         str: _description_
 #     """
-#     return (
-#         float_to_letters(
-#             number,
-#             decimal_rank=decimal_rank,
-#             post_1990_orthographe=post_1990_orthographe,
-#             language=language,
-#         )
-#         + " "
-#         + CURRENCY_FORMS_FR[currency]
+# return (
+#     float_to_letters(
+#         number,
+#         decimal_rank=decimal_rank,
+#         post_1990_orthographe=post_1990_orthographe,
+#         language=language,
 #     )
+#     + " "
+#     + CURRENCY_FORMS_FR[currency]
+# )
+
+
+def make_currency(*arg, **kwargs) -> str:
+    print(CURRENCY_FORMS_FR)
+    return "TODO"
+
+
+def numbers(number: int | float | str) -> tuple[float | int, str]:
+    """Create a float or int and a string of the number.
+
+    Args:
+        number (int | float | str): The number to convert.
+
+    Returns:
+        tuple[float | int, str]: The number as a float or int and a string.
+    """
+    number_str = ""
+    number_int_or_float = 0
+    if isinstance(number, str):
+        number_str = number
+
+    if isinstance(number, (int, float)):
+        number_int_or_float = number
+        number_str = f"{number}"
+
+    return number_int_or_float, number_str
 
 
 def big_number_from_rank(rank: int) -> str:
@@ -589,6 +618,14 @@ def make_letters(
                 post_1990_orthographe=post_1990_orthographe,
                 language=language,
             )
+        )
+
+    if mode in CURRENCY_FORMS_FR_CODES:
+        return make_currency(
+            number,
+            currency=mode,
+            post_1990_orthographe=post_1990_orthographe,
+            language=language,
         )
 
     raise ValueError(f"Invalid mode {mode = }")

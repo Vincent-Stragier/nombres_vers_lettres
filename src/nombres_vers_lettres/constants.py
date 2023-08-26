@@ -66,6 +66,8 @@ CURRENCY_FORMS_FR = {
     "PKR": (("roupie", "roupies"), ("paisa", "paise")),
 }
 
+CURRENCY_FORMS_FR_CODES = list(CURRENCY_FORMS_FR.keys())
+
 NUMBERS = {
     0: "zéro",
     1: "un",
