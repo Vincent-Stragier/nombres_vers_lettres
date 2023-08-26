@@ -4,8 +4,12 @@ import argparse
 import os
 import sys
 
-from nombres_vers_lettres.constants import VALID_FEMININE, VALID_MASCULINE
-from nombres_vers_lettres.make_letters import float_to_letters
+from nombres_vers_lettres.constants import (
+    AVAILABLE_LANGUAGES,
+    VALID_FEMININE,
+    VALID_MASCULINE,
+)
+from nombres_vers_lettres.make_letters import make_letters
 
 
 def main():
@@ -32,27 +36,35 @@ def main():
         default=None,
     )
     group.add_argument(
-        "--nominal",
-        "-n",
-        action="store_true",
-        help=(
-            "Convert the number to nominal letters (e.g. 'un' -> 'une') "
-            "(default)"
-        ),
-        default=None,
-    )
-    group.add_argument(
         "--cardinal",
         "-c",
         action="store_true",
-        help="Convert the number to cardinal letters (e.g. 'un' -> 'un')",
+        help=(
+            "Convert the number to cardinal numbers in letters "
+            "(e.g., 'un chat', 'deux ânes', 'quatre-vingts chats',"
+            " 'deux-cents billes', etc.)"
+        ),
         default=None,
     )
     group.add_argument(
         "--ordinal",
         "-o",
         action="store_true",
-        help="Convert the number to ordinal letters (e.g. 'un' -> 'premier')",
+        help=(
+            "Convert the number to ordinal numbers in letters "
+            "(e.g., 'la page un', 'la page quatre-vingt', "
+            "'la page deux-cent', etc.)"
+        ),
+        default=None,
+    )
+    group.add_argument(
+        "--ordinal_nominal",
+        "-on",
+        action="store_true",
+        help=(
+            "Convert the number to ordinal nominal numbers in letters "
+            "(e.g., 'la quatre-vingtième page', 'la deux-centième page', etc.)"
+        ),
         default=None,
     )
 
@@ -67,12 +79,12 @@ def main():
         "-g",
         help=(
             "The gender to use for the conversion "
-            f"({feminine} or {masculine}), default is masculine"
+            f"({feminine} or {masculine}), default is masculine "
+            "(only has an effect on cardinal and ordinal_nominal modes))"
         ),
         type=str,
         default=None,
     )
-
     group.add_argument(
         "--masculine",
         "-m",
@@ -88,6 +100,19 @@ def main():
         default=None,
     )
 
+    # Add optional argument for plural
+    parser.add_argument(
+        "--plural",
+        "-p",
+        action="store_true",
+        help=(
+            "Convert the number to plural letters (e.g. 'un' -> 'uns'), "
+            "only has an effect on cardinal and ordinal_nominal modes"
+        ),
+        default=None,
+    )
+
+    # Add optional argument for post-1990 orthographe
     parser.add_argument(
         "--post_1990_orthographe",
         "-t",
@@ -96,24 +121,63 @@ def main():
         default=None,
     )
 
-    # parser.add_argument(
-    #     "--config", "-c", type=str, help="Path to the config file"
-    # )
-    # parser.add_argument(
-    #     "--prompt",
-    #     "-p",
-    #     type=str,
-    #     default="",
-    #     help="Use the prompt file instead of the default text",
-    # )
+    # Add optional argument for language code
+    available_languages = ", ".join(AVAILABLE_LANGUAGES)
+
+    parser.add_argument(
+        "--language",
+        "-l",
+        type=str,
+        help=(
+            "The language code to use for the conversion "
+            f"(e.g. {available_languages})"
+        ),
+        default="fr_BE",
+    )
 
     args = parser.parse_args()
 
-    # if args.config:
-    # print(args)
+    # Parse mode
+    if args.mode is not None:
+        selected_mode = args.mode
+
+    elif args.cardinal is not None:
+        selected_mode = "cardinal"
+
+    elif args.ordinal is not None:
+        selected_mode = "ordinal_adjectival"
+
+    elif args.ordinal_nominal is not None:
+        selected_mode = "ordinal_nominal"
+
+    else:
+        selected_mode = "cardinal"
+
+    # Parse gender
+    if args.gender is not None:
+        if args.gender in (VALID_FEMININE + VALID_MASCULINE):
+            selected_gender = args.gender
+
+        else:
+            sys.exit(
+                f"Gender must be either feminine ({feminine})"
+                f" or masculine ({masculine})"
+            )
+    elif args.feminine is not None:
+        selected_gender = "feminine"
+
+    else:
+        # Default
+        selected_gender = "masculine"
+
     print(
-        float_to_letters(
-            args.number, post_1990_orthographe=args.post_1990_orthographe
+        make_letters(
+            args.number,
+            gender=selected_gender,
+            plural=args.plural,
+            language=args.language,
+            mode=selected_mode,
+            post_1990_orthographe=args.post_1990_orthographe,
         )
     )
 

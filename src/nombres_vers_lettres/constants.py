@@ -125,6 +125,8 @@ LANGUAGES_DECADES = {
     "fr_IT": DECADES_CH,
 }
 
+AVAILABLE_LANGUAGES = list(LANGUAGES_DECADES.keys())
+
 FRENCH_FRENCH_LIKE = ("fr_FR", "fr_CA")
 
 # Long and short scales

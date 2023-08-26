@@ -87,6 +87,19 @@ TEST_DATA = [
         "post_1990_orthographe": False,
     },
     {
+        "number": "5,100",
+        "letters": "cinq euros et dix cents",
+        "mode": "EUR",
+        "language": "fr_BE",
+    },
+    {
+        "number": "9",
+        "letters": "neuvième",
+        "mode": "ordinal_nominal",
+        "language": "fr_BE",
+        "post_1990_orthographe": False,
+    },
+    {
         "number": "25",
         "letters": "vingt-cinq",
         "mode": "cardinal_nominal",
@@ -243,8 +256,14 @@ TEST_DATA = [
         "language": "fr_BE",
     },
     {
+        "number": "3300",
+        "letters": "trois mille trois cents",
+        "mode": "cardinal_nominal",
+        "language": "fr_BE",
+    },
+    {
         "number": "420,69",
-        "letters": "quatre cent vingt euros soixante-neuf cents",
+        "letters": "quatre cent vingt euros et soixante-neuf cents",
         "mode": "EUR",
         "language": "fr_BE",
     },
@@ -316,6 +335,45 @@ TEST_DATA = [
         "letters": "deux milliards",
         "mode": "cardinal_nominal",
         "language": "fr_BE",
+    },
+    # The biggest number that can be written in French
+    {
+        "number": (
+            "9999999999999999999999999999999999999999999999999999999999999999"
+            "99,9999999999999999999999999999999999999999999999999999999999999"
+            "99"
+        ),
+        "letters": (
+            "neuf-cent-nonante-neuf-décilliards-neuf-cent-nonante-neuf-"
+            "décillions-neuf-cent-nonante-neuf-nonilliards-neuf-cent-nonante-"
+            "neuf-nonillions-neuf-cent-nonante-neuf-octilliards-neuf-cent-"
+            "nonante-neuf-octillions-neuf-cent-nonante-neuf-septilliards-"
+            "neuf-cent-nonante-neuf-septillions-neuf-cent-nonante-neuf-"
+            "sextilliards-neuf-cent-nonante-neuf-sextillions-neuf-cent-"
+            "nonante-neuf-quintilliards-neuf-cent-nonante-neuf-quintillions-"
+            "neuf-cent-nonante-neuf-quadrilliards-neuf-cent-nonante-neuf-"
+            "quadrillions-neuf-cent-nonante-neuf-trilliards-neuf-cent-"
+            "nonante-neuf-trillions-neuf-cent-nonante-neuf-billiards-neuf-"
+            "cent-nonante-neuf-billions-neuf-cent-nonante-neuf-milliards-"
+            "neuf-cent-nonante-neuf-millions-neuf-cent-nonante-neuf-mille-"
+            "neuf-cent-nonante-neuf virgule neuf-cent-nonante-neuf-millièmes-"
+            "neuf-cent-nonante-neuf-millionièmes-neuf-cent-nonante-neuf-"
+            "milliardièmes-neuf-cent-nonante-neuf-billionièmes-neuf-cent-"
+            "nonante-neuf-billiardièmes-neuf-cent-nonante-neuf-trillionièmes-"
+            "neuf-cent-nonante-neuf-trilliardièmes-neuf-cent-nonante-neuf-"
+            "quadrillionièmes-neuf-cent-nonante-neuf-quadrilliardièmes-neuf-"
+            "cent-nonante-neuf-quintillionièmes-neuf-cent-nonante-neuf-"
+            "quintilliardièmes-neuf-cent-nonante-neuf-sextillionièmes-neuf-"
+            "cent-nonante-neuf-sextilliardièmes-neuf-cent-nonante-neuf-"
+            "septillionièmes-neuf-cent-nonante-neuf-septilliardièmes-neuf-"
+            "cent-nonante-neuf-octillionièmes-neuf-cent-nonante-neuf-"
+            "octilliardièmes-neuf-cent-nonante-neuf-nonillionièmes-neuf-cent-"
+            "nonante-neuf-nonilliardièmes-neuf-cent-nonante-neuf-"
+            "décillionièmes-neuf-cent-nonante-neuf-décilliardièmes"
+        ),
+        "mode": "cardinal_nominal",
+        "language": "fr_BE",
+        "post_1990_orthographe": True,
     },
     # France French
     {
