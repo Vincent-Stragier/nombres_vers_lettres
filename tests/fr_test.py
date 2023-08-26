@@ -10,6 +10,13 @@ from nombres_vers_lettres.make_letters import make_letters
 TEST_DATA = [
     # Belgium French
     {
+        "number": "-2222",
+        "letters": "moins deux mille deux cent vingt-deux",
+        "mode": "cardinal_nominal",
+        "language": "fr_BE",
+        "post_1990_orthographe": False,
+    },
+    {
         "number": "-25",
         "letters": "moins vingt-cinq",
         "mode": "cardinal_nominal",
@@ -32,8 +39,22 @@ TEST_DATA = [
     },
     {
         "number": "0,0001",
+        "letters": "un centième de cent",
+        "mode": "EUR",
+        "language": "fr_BE",
+        "post_1990_orthographe": False,
+    },
+    {
+        "number": "0,0001",
         "letters": "zéro virgule cent millionièmes",
         "mode": "cardinal_nominal",
+        "language": "fr_BE",
+        "post_1990_orthographe": False,
+    },
+    {
+        "number": "0,0002",
+        "letters": "deux centièmes de cent",
+        "mode": "EUR",
         "language": "fr_BE",
         "post_1990_orthographe": False,
     },
@@ -41,6 +62,13 @@ TEST_DATA = [
         "number": "0,01",
         "letters": "zéro virgule un centième",
         "mode": "cardinal_nominal",
+        "language": "fr_BE",
+        "post_1990_orthographe": False,
+    },
+    {
+        "number": "0,01",
+        "letters": "un cent",
+        "mode": "EUR",
         "language": "fr_BE",
         "post_1990_orthographe": False,
     },
@@ -212,6 +240,12 @@ TEST_DATA = [
         "number": "200",
         "letters": "deux centième",
         "mode": "ordinal_nominal",
+        "language": "fr_BE",
+    },
+    {
+        "number": "420,69",
+        "letters": "quatre cent vingt euros soixante-neuf cents",
+        "mode": "EUR",
         "language": "fr_BE",
     },
     {

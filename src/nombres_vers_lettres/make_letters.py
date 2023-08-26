@@ -20,44 +20,83 @@ from nombres_vers_lettres.constants import (  # CURRENCY_FORMS_FR,
     VALID_MASCULINE,
 )
 
-# TODO: Check ordinal/cardinal numbers
 # TODO: Check masculine/feminine
 # TODO: Check plural
 
 
-# def make_currency(
-#     number: float | int | str,
-#     currency: str = "EUR",
-#     decimal_rank: bool = True,
-#     post_1990_orthographe: bool = True,
-#     language: str = "fr_BE",
-# ) -> str:
-#     """Convert a number to a currency.
+def make_currency(
+    number: float | int | str,
+    currency: str = "EUR",
+    post_1990_orthographe: bool = True,
+    language: str = "fr_BE",
+) -> str:
+    """Convert a number to a currency.
 
-#     Args:
-#         number (float | int | str): The number to convert.
-#         currency (str, optional): Defaults to "EUR".
-#         decimal_rank (bool, optional): Defaults to True.
-#         post_1990_orthographe (bool, optional): Defaults to False.
+    Args:
+        number (float | int | str): The number to convert.
+        currency (str, optional): Defaults to "EUR".
+        decimal_rank (bool, optional): Defaults to True.
+        post_1990_orthographe (bool, optional): Defaults to False.
 
-#     Returns:
-#         str: _description_
-#     """
-# return (
-#     float_to_letters(
-#         number,
-#         decimal_rank=decimal_rank,
-#         post_1990_orthographe=post_1990_orthographe,
-#         language=language,
-#     )
-#     + " "
-#     + CURRENCY_FORMS_FR[currency]
-# )
+    Returns:
+        str: The number in letters.
+    """
+    number_int_or_float, number_str = numbers(number, mode="float")
 
+    # Check if the number is an integer
+    if "." not in number_str:
+        plural = 1 if number_int_or_float > 1 else 0
 
-def make_currency(*arg, **kwargs) -> str:
-    print(CURRENCY_FORMS_FR)
-    return "TODO"
+        return (
+            integer_to_letters(
+                number_str,
+                post_1990_orthographe=post_1990_orthographe,
+                language=language,
+            )
+            + " "
+            + CURRENCY_FORMS_FR[currency][0][plural]
+        )
+
+    if -1 < number_int_or_float < 1:
+        number_str = number_str.split(".")[1].ljust(2, "0")
+
+        separator = " "
+        if len(number_str) > 2:
+            number_str = number_str[:2] + "." + number_str[2:]
+            separator = " de "
+
+        plural = 1 if float(number_str) > 1 else 0
+
+        if number_int_or_float < 0:
+            number_str = "-" + number_str
+
+        return (
+            float_to_letters(
+                number_str,
+                post_1990_orthographe=post_1990_orthographe,
+                language=language,
+            ).replace("zéro virgule ", "")
+            + separator
+            + CURRENCY_FORMS_FR[currency][1][plural]
+        )
+
+    integer_part, decimal_part = number_str.split(".")
+
+    return (
+        make_currency(
+            integer_part,
+            currency=currency,
+            post_1990_orthographe=post_1990_orthographe,
+            language=language,
+        )
+        + " "
+        + make_currency(
+            f"0.{decimal_part}",
+            currency=currency,
+            post_1990_orthographe=post_1990_orthographe,
+            language=language,
+        )
+    )
 
 
 def numbers(
@@ -392,7 +431,9 @@ def integer_to_letters(
 
     # Check if the number is negative
     if number_int < 0:
-        return "moins " + integer_to_letters(-number_int, language=language)
+        return "moins " + integer_to_letters(
+            number_str.replace("-", ""), language=language
+        )
 
     # We already have a function for numbers under 1000
     if number_int < 1000 and not decimal:
