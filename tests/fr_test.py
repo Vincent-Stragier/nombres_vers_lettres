@@ -2,7 +2,7 @@
 r"""Test of the __main__ module.
 
 Run the test with:
-pytest -v tests\test_fr_BE.py
+pytest -v tests\fr_test.py
 """
 import pytest
 from nombres_vers_lettres.make_letters import make_letters
@@ -12,60 +12,60 @@ TEST_DATA = [
     {
         "number": "0",
         "letters": "zéro",
-        "mode": "nominal",
+        "mode": "cardinal_nominal",
         "language": "fr_BE",
         "post_1990_orthographe": False,
     },
     {
         "number": "28",
         "letters": "vingt-huit",
-        "mode": "nominal",
+        "mode": "cardinal_nominal",
         "language": "fr_BE",
     },
     {
         "number": "31",
         "letters": "trente et un",
-        "mode": "nominal",
+        "mode": "cardinal_nominal",
         "language": "fr_BE",
     },
     {
         "number": "51",
         "letters": "cinquante et un",
         "language": "fr_BE",
-        "mode": "nominal",
+        "mode": "cardinal_nominal",
         "post_1990_orthographe": False,
     },
     {
         "number": "51",
         "letters": "cinquante-et-un",
         "language": "fr_BE",
-        "mode": "nominal",
+        "mode": "cardinal_nominal",
         "post_1990_orthographe": True,
     },
     {
         "number": "61",
         "letters": "soixante et un",
         "language": "fr_BE",
-        "mode": "nominal",
+        "mode": "cardinal_nominal",
         "post_1990_orthographe": False,
     },
     {
         "number": "61",
         "letters": "soixante-et-un",
-        "mode": "nominal",
+        "mode": "cardinal_nominal",
         "language": "fr_BE",
         "post_1990_orthographe": True,
     },
     {
         "number": "70",
         "letters": "septante",
-        "mode": "nominal",
+        "mode": "cardinal_nominal",
         "language": "fr_BE",
     },
     {
         "number": "80",
         "letters": "quatre-vingts",
-        "mode": "nominal",
+        "mode": "cardinal_nominal",
         "language": "fr_BE",
     },
     {
@@ -77,13 +77,13 @@ TEST_DATA = [
     {
         "number": "80",
         "letters": "quatre-vingtième",
-        "mode": "ordinal",
+        "mode": "ordinal_nominal",
         "language": "fr_BE",
     },
     {
         "number": "81",
         "letters": "quatre-vingt-un",
-        "mode": "nominal",
+        "mode": "cardinal_nominal",
         "language": "fr_BE",
     },
     {
@@ -95,13 +95,13 @@ TEST_DATA = [
     {
         "number": "81",
         "letters": "quatre-vingt-unième",
-        "mode": "ordinal",
+        "mode": "ordinal_nominal",
         "language": "fr_BE",
     },
     {
         "number": "90",
         "letters": "nonante",
-        "mode": "nominal",
+        "mode": "cardinal_nominal",
         "language": "fr_BE",
     },
     {
@@ -113,25 +113,25 @@ TEST_DATA = [
     {
         "number": "90",
         "letters": "nonantième",
-        "mode": "ordinal",
+        "mode": "ordinal_nominal",
         "language": "fr_BE",
     },
     {
         "number": "100",
         "letters": "cent",
-        "mode": "nominal",
+        "mode": "cardinal_nominal",
         "language": "fr_BE",
     },
     {
         "number": "128",
         "letters": "cent vingt-huit",
-        "mode": "nominal",
+        "mode": "cardinal_nominal",
         "language": "fr_BE",
     },
     {
         "number": "200",
         "letters": "deux cents",
-        "mode": "nominal",
+        "mode": "cardinal_nominal",
         "language": "fr_BE",
     },
     {
@@ -143,92 +143,115 @@ TEST_DATA = [
     {
         "number": "200",
         "letters": "deux centièmes",
-        "mode": "ordinal",
+        "mode": "cardinal_nominal",
         "language": "fr_BE",
     },
     {
         "number": "777",
         "letters": "sept cent septante-sept",
-        "mode": "nominal",
+        "mode": "cardinal_nominal",
         "language": "fr_BE",
     },
     {
         "number": "851",
         "letters": "huit cent cinquante et un",
-        "mode": "nominal",
+        "mode": "cardinal_nominal",
         "language": "fr_FR",
     },
     {
         "number": "1000",
         "letters": "mille",
-        "mode": "nominal",
+        "mode": "cardinal_nominal",
+        "language": "fr_BE",
+    },
+    {
+        "number": "80000",
+        "letters": "quatre-vingt mille",
+        "mode": "cardinal_nominal",
+        "language": "fr_BE",
+    },
+    {
+        "number": "80000000",
+        "letters": "quatre-vingts millions",
+        "mode": "cardinal_nominal",
+        "language": "fr_BE",
+    },
+    {
+        "number": "2000000000",
+        "letters": "deux milliards",
+        "mode": "cardinal_nominal",
         "language": "fr_BE",
     },
     # France French
-    {"number": "0", "letters": "zéro", "mode": "nominal", "language": "fr_FR"},
+    {
+        "number": "0",
+        "letters": "zéro",
+        "mode": "cardinal_nominal",
+        "language": "fr_FR",
+    },
     {
         "number": "51",
         "letters": "cinquante et un",
-        "mode": "nominal",
+        "mode": "cardinal_nominal",
         "language": "fr_FR",
     },
     {
         "number": "61",
         "letters": "soixante et un",
-        "mode": "nominal",
+        "mode": "cardinal_nominal",
         "language": "fr_FR",
         "post_1990_orthographe": False,
     },
     {
         "number": "61",
         "letters": "soixante-et-un",
-        "mode": "nominal",
+        "mode": "cardinal_nominal",
         "language": "fr_FR",
         "post_1990_orthographe": True,
     },
     {
         "number": "71",
         "letters": "soixante et onze",
-        "mode": "nominal",
+        "mode": "cardinal_nominal",
         "language": "fr_FR",
         "post_1990_orthographe": False,
     },
     {
         "number": "71",
         "letters": "soixante-et-onze",
-        "mode": "nominal",
+        "mode": "cardinal_nominal",
         "language": "fr_FR",
         "post_1990_orthographe": True,
     },
     {
         "number": "91",
         "letters": "quatre-vingt-onze",
-        "mode": "nominal",
+        "mode": "cardinal_nominal",
         "language": "fr_FR",
         "post_1990_orthographe": False,
     },
     {
         "number": "100",
         "letters": "cent",
-        "mode": "nominal",
+        "mode": "cardinal_nominal",
         "language": "fr_FR",
     },
     {
         "number": "777",
         "letters": "sept cent soixante-dix-sept",
-        "mode": "nominal",
+        "mode": "cardinal_nominal",
         "language": "fr_FR",
     },
     {
         "number": "851",
         "letters": "huit cent cinquante et un",
-        "mode": "nominal",
+        "mode": "cardinal_nominal",
         "language": "fr_FR",
     },
     {
         "number": "1000",
         "letters": "mille",
-        "mode": "nominal",
+        "mode": "cardinal_nominal",
         "language": "fr_FR",
     },
 ]

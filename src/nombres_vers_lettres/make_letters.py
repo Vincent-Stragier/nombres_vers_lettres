@@ -9,9 +9,8 @@ https://fr.wikipedia.org/wiki/Nombres_en_fran%C3%A7ais
 import re
 import traceback
 
-from nombres_vers_lettres.constants import (
+from nombres_vers_lettres.constants import (  # CURRENCY_FORMS_FR,
     BIG_NUMBERS_BY_RANK,
-    CURRENCY_FORMS_FR,
     FRENCH_FRENCH_LIKE,
     LANGUAGES_DECADES,
     NUMBERS,
@@ -19,39 +18,39 @@ from nombres_vers_lettres.constants import (
     VALID_MASCULINE,
 )
 
-# TODO: Add support for France's "soixante-dix" and "quatre-vingt-dix"
-# TODO: Add support for "-"" or " " syntax
 # TODO: Check ordinal/cardinal numbers
+# TODO: Check masculine/feminine
+# TODO: Check plural
+# TODO: Handle 80 millions/mille case
 
+# def make_currency(
+#     number: float | int | str,
+#     currency: str = "EUR",
+#     decimal_rank: bool = True,
+#     post_1990_orthographe: bool = True,
+#     language: str = "fr_BE",
+# ) -> str:
+#     """Convert a number to a currency.
 
-def make_currency(
-    number: float | int | str,
-    currency: str = "EUR",
-    decimal_rank: bool = True,
-    post_1990_orthographe: bool = True,
-    language: str = "fr_BE",
-) -> str:
-    """Convert a number to a currency.
+#     Args:
+#         number (float | int | str): The number to convert.
+#         currency (str, optional): Defaults to "EUR".
+#         decimal_rank (bool, optional): Defaults to True.
+#         post_1990_orthographe (bool, optional): Defaults to False.
 
-    Args:
-        number (float | int | str): The number to convert.
-        currency (str, optional): Defaults to "EUR".
-        decimal_rank (bool, optional): Defaults to True.
-        post_1990_orthographe (bool, optional): Defaults to False.
-
-    Returns:
-        str: _description_
-    """
-    return (
-        float_to_letters(
-            number,
-            decimal_rank=decimal_rank,
-            post_1990_orthographe=post_1990_orthographe,
-            language=language,
-        )
-        + " "
-        + CURRENCY_FORMS_FR[currency]
-    )
+#     Returns:
+#         str: _description_
+#     """
+#     return (
+#         float_to_letters(
+#             number,
+#             decimal_rank=decimal_rank,
+#             post_1990_orthographe=post_1990_orthographe,
+#             language=language,
+#         )
+#         + " "
+#         + CURRENCY_FORMS_FR[currency]
+#     )
 
 
 def big_number_from_rank(rank: int) -> str:
@@ -111,6 +110,7 @@ def make_ordinal(
     Returns:
         str: The ordinal number.
     """
+    # Number is already an ordinal number
     if cardinal_number_str.endswith("ième") or cardinal_number_str.endswith(
         "ièmes"
     ):
@@ -119,7 +119,7 @@ def make_ordinal(
 
         return cardinal_number_str + ("s" if plural else "")
 
-    if cardinal_number_str == "un":
+    if cardinal_number_str in ("un", "une"):
         if gender in VALID_FEMININE:
             return "première" if not plural else "premières"
 
@@ -544,7 +544,8 @@ def make_letters(
     Returns:
         str: The number in letters.
     """
-    if mode == "nominal":
+    if mode in ("cardinal", "cardinal_nominal"):
+        # un, deux, trois virgule cinq
         return float_to_letters(
             number,
             decimal_rank=False,
@@ -561,15 +562,17 @@ def make_letters(
                 f"(received {number}, type {type(number)})"
             )
 
-    if mode == "cardinal":
-        return integer_to_letters(
+    if mode == "ordinal_adjectival":
+        # la page trois, la page deux cent, etc.
+        integer_to_letters(
             number,
             decimal_rank=True,
             post_1990_orthographe=post_1990_orthographe,
             language=language,
         )
 
-    if mode == "ordinal":
+    if mode == "ordinal_nominal":
+        # 3 troisième, etc.
         return make_ordinal(
             integer_to_letters(
                 number,
