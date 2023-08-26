@@ -60,23 +60,63 @@ def make_currency(*arg, **kwargs) -> str:
     return "TODO"
 
 
-def numbers(number: int | float | str) -> tuple[float | int, str]:
+def numbers(
+    number: int | float | str, mode: str = "int"
+) -> tuple[float | int, str]:
     """Create a float or int and a string of the number.
 
     Args:
         number (int | float | str): The number to convert.
+        mode (str, optional): The mode to use. Defaults to "int".
+
+    Raises:
+        ValueError: If the number is invalid.
 
     Returns:
         tuple[float | int, str]: The number as a float or int and a string.
     """
     number_str = ""
     number_int_or_float = 0
+
     if isinstance(number, str):
         number_str = number
+        number_str = re.sub(r"[^\-\d\.\,\n]+", "", number_str)
+
+        if number_str.count(".") > 1:
+            raise ValueError("Invalid number: too many decimal points (.)")
+
+        if number_str.count(",") > 1:
+            raise ValueError("Invalid number: too many decimal points (,)")
+
+        # Only keep the decimal point
+        number_str = number_str.replace(",", ".")
+
+        if "-" in number_str and not number_str.startswith("-"):
+            raise ValueError(
+                "Invalid number: negative sign must be at the beginning"
+            )
+
+        if number_str.count("-") > 1:
+            raise ValueError("Invalid number: too many negative signs")
+
+        if number_str == "":
+            raise ValueError("Invalid number: empty string")
+
+        # Create a number
+        if "." not in number_str:
+            number_int_or_float = int(number_str)
+
+        else:
+            number_int_or_float = float(number_str)
 
     if isinstance(number, (int, float)):
         number_int_or_float = number
-        number_str = f"{number}"
+
+        if mode == "int" or number % 1 == 0:
+            number_str = f"{number:.0f}"
+
+        elif mode == "float":
+            number_str = f"{number:.2f}"
 
     return number_int_or_float, number_str
 
@@ -342,34 +382,25 @@ def integer_to_letters(
     Returns:
         str: The number in letters.
     """
-    exact_number = ""
-    if isinstance(number, str):
-        exact_number = number
-        number = int(number)
+    number_int, number_str = numbers(number, mode="int")
 
-    if number % 1 != 0:
+    if not isinstance(number_int, int):
         raise ValueError(
             "Number must be an integer "
             f"(received {number}, type {type(number)})"
         )
 
     # Check if the number is negative
-    if number < 0:
-        return "moins " + integer_to_letters(-number)
+    if number_int < 0:
+        return "moins " + integer_to_letters(-number_int, language=language)
 
     # We already have a function for numbers under 1000
-    if number < 1000 and not decimal:
+    if number_int < 1000 and not decimal:
         return positive_integer_under_one_thousand(
-            number,
+            number_int,
             post_1990_orthographe=post_1990_orthographe,
             language=language,
         )
-
-    # If the number is passed as a string, we need don't need to convert it
-    number_str = exact_number
-
-    if exact_number == "":
-        number_str = f"{number:.0f}"
 
     # Compute "rank"
     rank = len(number_str) // 3 * 3
@@ -468,32 +499,7 @@ def float_to_letters(
     Returns:
         str: The number in letters.
     """
-    # If the number is a string there is not conversion error
-    exact_number = ""
-    if isinstance(number, str):
-        exact_number = number
-        exact_number = re.sub(r"[^\-\d\.\,\n]+", "", exact_number)
-
-        if exact_number.count(".") > 1:
-            raise ValueError("Invalid number: too many decimal points (.)")
-
-        if exact_number.count(",") > 1:
-            raise ValueError("Invalid number: too many decimal points (,)")
-
-        exact_number = exact_number.replace(",", ".")
-
-        if "-" in exact_number and not exact_number.startswith("-"):
-            raise ValueError(
-                "Invalid number: negative sign must be at the beginning"
-            )
-
-        if exact_number.count("-") > 1:
-            raise ValueError("Invalid number: too many negative signs")
-
-        # Create a fake number to check if it is negative
-        number = 1
-        if exact_number.startswith("-"):
-            number = -1
+    number, exact_number = numbers(number, mode="float")
 
     if number % 1 == 0 and exact_number == "":
         return integer_to_letters(
