@@ -116,7 +116,7 @@ def numbers(
             number_str = f"{number:.0f}"
 
         elif mode == "float":
-            number_str = f"{number:.2f}"
+            number_str = f"{number}"
 
     return number_int_or_float, number_str
 
@@ -524,11 +524,7 @@ def float_to_letters(
             language=language,
         )
 
-    number_str = f"{number}".split(".")
-
-    if exact_number != "":
-        number_str = exact_number.split(".")
-
+    number_str = exact_number.split(".")
     integer_part = number_str[0]
 
     # If the number is an integer, we don't need to convert the decimal part
