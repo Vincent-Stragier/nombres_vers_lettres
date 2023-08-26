@@ -10,6 +10,20 @@ from nombres_vers_lettres.make_letters import make_letters
 TEST_DATA = [
     # Belgium French
     {
+        "number": "0,01",
+        "letters": "zéro virgule un centième",
+        "mode": "cardinal_nominal",
+        "language": "fr_BE",
+        "post_1990_orthographe": False,
+    },
+    {
+        "number": "0,02",
+        "letters": "zéro virgule deux centièmes",
+        "mode": "cardinal_nominal",
+        "language": "fr_BE",
+        "post_1990_orthographe": False,
+    },
+    {
         "number": "0",
         "letters": "zéro",
         "mode": "cardinal_nominal",
@@ -71,7 +85,7 @@ TEST_DATA = [
     {
         "number": "80",
         "letters": "quatre-vingt",
-        "mode": "cardinal",
+        "mode": "ordinal_adjectival",
         "language": "fr_BE",
     },
     {
@@ -129,6 +143,18 @@ TEST_DATA = [
         "language": "fr_BE",
     },
     {
+        "number": "180",
+        "letters": "cent quatre-vingts",
+        "mode": "cardinal",
+        "language": "fr_BE",
+    },
+    {
+        "number": "183",
+        "letters": "cent quatre-vingt-trois",
+        "mode": "cardinal",
+        "language": "fr_BE",
+    },
+    {
         "number": "200",
         "letters": "deux cents",
         "mode": "cardinal_nominal",
@@ -137,13 +163,13 @@ TEST_DATA = [
     {
         "number": "200",
         "letters": "deux cent",
-        "mode": "cardinal",
+        "mode": "ordinal_adjectival",
         "language": "fr_BE",
     },
     {
         "number": "200",
-        "letters": "deux centièmes",
-        "mode": "cardinal_nominal",
+        "letters": "deux centième",
+        "mode": "ordinal_nominal",
         "language": "fr_BE",
     },
     {

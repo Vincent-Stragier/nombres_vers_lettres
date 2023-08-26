@@ -21,7 +21,6 @@ from nombres_vers_lettres.constants import (  # CURRENCY_FORMS_FR,
 # TODO: Check ordinal/cardinal numbers
 # TODO: Check masculine/feminine
 # TODO: Check plural
-# TODO: Handle 80 millions/mille case
 
 # def make_currency(
 #     number: float | int | str,
@@ -98,7 +97,7 @@ def decimal_from_rank(rank: int) -> str:
 def make_ordinal(
     cardinal_number_str: str,
     gender: str = "male",
-    plural: bool = False,
+    plural: bool | None = None,
 ) -> str:
     """Convert a cardinal number to an ordinal number.
 
@@ -111,9 +110,7 @@ def make_ordinal(
         str: The ordinal number.
     """
     # Number is already an ordinal number
-    if cardinal_number_str.endswith("ième") or cardinal_number_str.endswith(
-        "ièmes"
-    ):
+    if cardinal_number_str.endswith(("ième", "ièmes")):
         if cardinal_number_str.endswith("s"):
             cardinal_number_str = cardinal_number_str[:-1]
 
@@ -128,7 +125,8 @@ def make_ordinal(
 
     ordinal_number_str = cardinal_number_str
     suffix = "ième"
-    if plural:
+
+    if plural or plural:
         suffix += "s"
 
     match cardinal_number_str[-1]:
@@ -147,13 +145,13 @@ def make_ordinal(
 # If you can build a number between 0 and 99, you can build any number.
 
 
-def positive_integer_under_one_hundred(
+def positive_integer_up_to_one_hundred(
     number: int,
     cardinal: bool = False,
     post_1990_orthographe: bool = False,
     language: str = "fr_BE",
 ) -> str:
-    """Convert a integer between 0 and under 100 to letters.
+    """Convert a integer between 0 and 100 included to letters.
 
     Args:
         number (int): The number to convert.
@@ -165,8 +163,10 @@ def positive_integer_under_one_hundred(
     Raises:
         ValueError: If the number is over 99.
     """
-    if number >= 100:
-        raise ValueError(f"Number must be under 100 (received {number})")
+    if number > 100:
+        raise ValueError(
+            f"Number must be under or equal to 100 (received {number})"
+        )
 
     if number % 1 != 0:
         raise ValueError(
@@ -174,27 +174,23 @@ def positive_integer_under_one_hundred(
             f"(received {number}, type {type(number)})"
         )
 
-    # 80 is a special case (4 time 20)
+    # 80 is a special case (4 times 20)
     decades = LANGUAGES_DECADES[language]
-    if number == 80 and cardinal is False:
+    if number == 80 and decades[80] == "quatre-vingt" and cardinal is False:
         return decades[number] + ("s" if decades[number] else "")
 
     # Directly lookup decades
     if number in (NUMBERS | decades):
         return (NUMBERS | decades).get(number, "")
 
-    # # Directly lookup special numbers (0-16)
-    # if number in NUMBERS:
-    #     return NUMBERS[number]
-
     if language in FRENCH_FRENCH_LIKE:
         if 71 < number < 80:
-            return "soixante-" + positive_integer_under_one_hundred(
+            return "soixante-" + positive_integer_up_to_one_hundred(
                 number - 60
             )
 
         if 90 < number < 100:
-            return "quatre-vingt-" + positive_integer_under_one_hundred(
+            return "quatre-vingt-" + positive_integer_up_to_one_hundred(
                 number - 80
             )
 
@@ -247,20 +243,17 @@ def positive_integer_under_one_thousand(
             f"(received {number}, type {type(number)})"
         )
 
-    if number < 100:
-        return positive_integer_under_one_hundred(
+    if number <= 100:
+        return positive_integer_up_to_one_hundred(
             number,
             cardinal=cardinal,
             post_1990_orthographe=post_1990_orthographe,
             language=language,
         )
 
-    if number == 100:
-        return "cent"
-
     # Form numbers over 100
     # Form the part under 100 (xx)
-    under_hundred_part_str = positive_integer_under_one_hundred(
+    under_hundred_part_str = positive_integer_up_to_one_hundred(
         number % 100,
         cardinal=cardinal,
         post_1990_orthographe=post_1990_orthographe,
@@ -273,7 +266,7 @@ def positive_integer_under_one_thousand(
     # Form the part over 100 (yxx)
     hundreds_part = (number - (number % 100)) // 100
     hundreds_part_str = (
-        positive_integer_under_one_hundred(
+        positive_integer_up_to_one_hundred(
             hundreds_part,
             cardinal=cardinal,
             post_1990_orthographe=post_1990_orthographe,
@@ -331,9 +324,11 @@ def integer_to_letters(
             f"(received {number}, type {type(number)})"
         )
 
+    # Check if the number is negative
     if number < 0:
         return "moins " + integer_to_letters(-number)
 
+    # We already have a function for numbers under 1000
     if number < 1000 and not decimal:
         return positive_integer_under_one_thousand(
             number,
@@ -341,8 +336,7 @@ def integer_to_letters(
             language=language,
         )
 
-    # Divide number in groups of 3 digits
-    # Convert number to string (remove scientific notation)
+    # If the number is passed as a string, we need don't need to convert it
     number_str = exact_number
 
     if exact_number == "":
@@ -353,8 +347,6 @@ def integer_to_letters(
 
     if len(number_str) % 3:
         rank += 3
-
-    # print(f"{number_str = }, {rank = }, {len(number_str) = }")
 
     number_groups = []
 
@@ -379,13 +371,11 @@ def integer_to_letters(
         if not decimal:
             group_rank = rank - group_rank
 
-        # print(f'{group = }, {group_rank = }, {ranks[group_rank] = }')
-
         # The group is empty, we skip it
         if int(group) == 0:
             continue
 
-        # Add a space between groups
+        # Add a space or a tiret between groups
         space = " " if not post_1990_orthographe else "-"
         if number_str != "":
             number_str += space
@@ -409,9 +399,14 @@ def integer_to_letters(
             if len(group) < 3 and decimal_rank is False:
                 rank_str = ""
 
-        use_cardinals = group_rank > 2 or cardinal
+        # Use cardinal numbers for low ranks (mille) or
+        # if the user wants to use cardinal numbers
+        use_cardinals = group_rank <= 3 or cardinal
 
-        if int(group) == 1 and group_rank < 6:
+        # We don't say "un cent" or "un mille", we say "mille" or "cent"
+        # We do say "un million" or "un milliard", etc.
+        # We do say "un dixième", "un centième", etc.
+        if int(group) == 1 and group_rank < 6 and not decimal:
             group_str = ""
 
         else:
@@ -466,6 +461,7 @@ def float_to_letters(
         if exact_number.count("-") > 1:
             raise ValueError("Invalid number: too many negative signs")
 
+        # Create a fake number to check if it is negative
         number = 1
         if exact_number.startswith("-"):
             number = -1
@@ -481,8 +477,11 @@ def float_to_letters(
     # Check if the number is negative
     if number < 0:
         if exact_number != "":
+            # Remove the negative sign
             exact_number = exact_number.replace("-", "")
             number = exact_number
+
+        # Recursively call the function
         return "moins " + float_to_letters(
             number,
             decimal_rank=decimal_rank,
@@ -497,6 +496,7 @@ def float_to_letters(
 
     integer_part = number_str[0]
 
+    # If the number is an integer, we don't need to convert the decimal part
     if len(number_str) == 1:
         return integer_to_letters(
             integer_part,
@@ -514,7 +514,7 @@ def float_to_letters(
             post_1990_orthographe=post_1990_orthographe,
             language=language,
         )
-        + " virgule "
+        + " virgule "
         + integer_to_letters(
             decimal_part,
             decimal=True,
@@ -527,7 +527,7 @@ def float_to_letters(
 
 def make_letters(
     number: float | int | str,
-    mode: str = "nominal",
+    mode: str = "cardinal",
     language: str = "fr_BE",
     post_1990_orthographe: bool = False,
 ) -> str:
@@ -535,7 +535,7 @@ def make_letters(
 
     Args:
         number (float | int | str): The number to convert.
-        mode (str, optional): The mode to use. Defaults to "nominal".
+        mode (str, optional): The mode to use. Defaults to "cardinal".
         language (str, optional): The language to use. Defaults to "fr_BE".
         post_1990_orthographe (bool, optional): If True, use tiret with "et",
         etc.
@@ -548,7 +548,7 @@ def make_letters(
         # un, deux, trois virgule cinq
         return float_to_letters(
             number,
-            decimal_rank=False,
+            decimal_rank=True,
             post_1990_orthographe=post_1990_orthographe,
             language=language,
         )
@@ -562,21 +562,30 @@ def make_letters(
                 f"(received {number}, type {type(number)})"
             )
 
+    print(f"{number = }, {type(number) = }, {mode = }")
+
     if mode == "ordinal_adjectival":
         # la page trois, la page deux cent, etc.
-        integer_to_letters(
+        ordinal_adjectival = integer_to_letters(
             number,
-            decimal_rank=True,
             post_1990_orthographe=post_1990_orthographe,
             language=language,
         )
 
+        # "vingt" and "cent" are invariable in ordinal adjectival
+        if ordinal_adjectival.endswith("vingts"):
+            ordinal_adjectival = ordinal_adjectival[:-1]
+
+        if ordinal_adjectival.endswith("cents"):
+            ordinal_adjectival = ordinal_adjectival[:-1]
+
+        return ordinal_adjectival
+
     if mode == "ordinal_nominal":
-        # 3 troisième, etc.
+        # 3 -> troisième, etc.
         return make_ordinal(
             integer_to_letters(
                 number,
-                decimal_rank=True,
                 post_1990_orthographe=post_1990_orthographe,
                 language=language,
             )
