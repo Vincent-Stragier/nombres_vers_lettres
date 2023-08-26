@@ -89,3 +89,12 @@ repos:
     rev: v2.4.0
     hooks:
       - id: setup-cfg-fmt
+
+  - repo: local
+    hooks:
+      - id: coverage-check
+        name: coverage-check (pytest)
+        entry: coverage run -m pytest
+        language: system
+        pass_filenames: false
+        always_run: true
