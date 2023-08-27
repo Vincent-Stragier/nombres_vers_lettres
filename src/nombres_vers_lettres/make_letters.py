@@ -43,26 +43,41 @@ def make_currency(
     # Check if the number is an integer
     if "." not in number_str:
         plural = 1 if number_int_or_float > 1 else 0
+        current_currency = CURRENCY_FORMS_FR[currency][0][plural]
 
+        de_or_space = " "
+        if number_str.endswith("000000"):
+            start_with_vowel = current_currency.startswith(
+                ("a", "e", "i", "o", "u", "y")
+            )
+            de_or_space = " d'" if start_with_vowel else " de "
         return (
             integer_to_letters(
                 number_str,
                 post_1990_orthographe=post_1990_orthographe,
                 language=language,
             )
-            + " "
-            + CURRENCY_FORMS_FR[currency][0][plural]
+            + de_or_space
+            + current_currency
         )
 
+    # Under 1 XYZ
     if -1 < number_int_or_float < 1:
         number_str = number_str.split(".")[1].rstrip("0").ljust(2, "0")
 
         separator = " "
         if len(number_str) > 2:
             number_str = number_str[:2] + "." + number_str[2:]
-            separator = " de "
+            plural = 1 if float(number_str) > 1 else 0
+            current_currency = CURRENCY_FORMS_FR[currency][1][plural]
+            start_with_vowel = current_currency.startswith(
+                ("a", "e", "i", "o", "u", "y")
+            )
+            separator = " d'" if start_with_vowel else " de "
 
-        plural = 1 if float(number_str) > 1 else 0
+        else:
+            plural = 1 if float(number_str) > 1 else 0
+            current_currency = CURRENCY_FORMS_FR[currency][1][plural]
 
         if number_int_or_float < 0:
             number_str = "-" + number_str
@@ -74,7 +89,7 @@ def make_currency(
                 language=language,
             ).replace("zéro virgule ", "")
             + separator
-            + CURRENCY_FORMS_FR[currency][1][plural]
+            + current_currency
         )
 
     integer_part, decimal_part = number_str.split(".")

@@ -5,7 +5,7 @@ Run the test with:
 pytest -v tests\fr_test.py
 """
 import pytest
-from nombres_vers_lettres.make_letters import make_letters
+from nombres_vers_lettres import make_letters
 
 TEST_DATA = [
     # Belgium French
@@ -391,6 +391,20 @@ TEST_DATA = [
         "number": "2000000000",
         "letters": "deux milliards",
         "mode": "cardinal_nominal",
+        "language": "fr_BE",
+        "post_1990_orthographe": False,
+    },
+    {
+        "number": "2000000000",
+        "letters": "deux milliards d'euros",
+        "mode": "EUR",
+        "language": "fr_BE",
+        "post_1990_orthographe": False,
+    },
+    {
+        "number": "2000000000",
+        "letters": "deux milliards de dollars",
+        "mode": "USD",
         "language": "fr_BE",
         "post_1990_orthographe": False,
     },
