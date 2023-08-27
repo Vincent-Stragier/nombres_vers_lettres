@@ -100,13 +100,13 @@ coverage html
 
 ## Some references
 
-Important references are in bold.
+Important references are in italic.
 
 - [Writing numbers in letters according to Le Figaro](https://leconjugueur.lefigaro.fr/frlesnombres.php)
 - [Writing numbers in euros according to Le Figaro](https://leconjugueur.lefigaro.fr/frlesnombreseneuros.php)
 - [How to write numbers in French according to Bescherelle](https://www.bescherelle.com/faq/comment-ecrire-les-nombres-en-lettres/)
 - [How to write numbers in Canadian pteFrench according to Bescherelle](https://bescherelle.ca/ecriture-des-nombres/)
-- [**How to write numbers in French according to Wikipedia**](https://fr.wikipedia.org/wiki/Nombres_en_fran%C3%A7ais#Apr%C3%A8s_la_virgule)
-- [**How to write big numbers in French according to Wikipedia**](https://fr.wikipedia.org/wiki/Noms_des_grands_nombres)
-- [**How to write ordinal numbers according to Lingolia**](https://francais.lingolia.com/fr/vocabulaire/nombres-date-et-heure/les-nombres-ordinaux)
+- [_How to write numbers in French according to Wikipedia_](https://fr.wikipedia.org/wiki/Nombres_en_fran%C3%A7ais#Apr%C3%A8s_la_virgule) ←
+- [_How to write big numbers in French according to Wikipedia_](https://fr.wikipedia.org/wiki/Noms_des_grands_nombres) ←
+- [_How to write ordinal numbers according to Lingolia_](https://francais.lingolia.com/fr/vocabulaire/nombres-date-et-heure/les-nombres-ordinaux) ←
 - [How to write cardinal numbers according to Lingolia](https://francais.lingolia.com/fr/vocabulaire/nombres-date-et-heure/les-nombres-cardinaux)
