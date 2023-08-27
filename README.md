@@ -7,6 +7,12 @@ A Python package to write numbers in French, with a simple script. The reason I 
 You can easily install this package using `pip`.
 
 ```bash
+python -m pip install nombres_vers_lettres
+```
+
+Or for the development version:
+
+```bash
 python -m pip install git+https://github.com/Vincent-Stragier/nombres_vers_lettres.git
 ```
 
