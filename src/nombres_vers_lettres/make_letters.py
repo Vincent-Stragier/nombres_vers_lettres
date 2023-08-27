@@ -522,7 +522,7 @@ def integer_to_letters(
         # We don't say "un cent" or "un mille", we say "mille" or "cent"
         # We do say "un million" or "un milliard", etc.
         # We do say "un dixième", "un centième", etc.
-        if int(group) == 1 and group_rank < 6 and not decimal:
+        if int(group) == 1 and 0 < group_rank < 6 and not decimal:
             group_str = ""
 
         else:

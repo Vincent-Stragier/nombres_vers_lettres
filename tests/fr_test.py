@@ -286,6 +286,13 @@ TEST_DATA = [
         "language": "fr_BE",
     },
     {
+        "number": "1001",
+        "letters": "mille-un",
+        "mode": "cardinal_nominal",
+        "language": "fr_BE",
+        "post_1990_orthographe": True,
+    },
+    {
         "number": 2000,
         "letters": "deux mille",
         "mode": "cardinal_nominal",

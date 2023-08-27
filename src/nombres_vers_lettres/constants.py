@@ -66,7 +66,7 @@ CURRENCY_FORMS_FR = {
     "PKR": (("roupie", "roupies"), ("paisa", "paise")),
 }
 
-CURRENCY_FORMS_FR_CODES = list(CURRENCY_FORMS_FR.keys())
+CURRENCY_FORMS_FR_CODES = sorted(list(CURRENCY_FORMS_FR.keys()))
 
 NUMBERS = {
     0: "zéro",
@@ -125,9 +125,10 @@ LANGUAGES_DECADES = {
     "fr_IT": DECADES_CH,
 }
 
-AVAILABLE_LANGUAGES = list(LANGUAGES_DECADES.keys())
+AVAILABLE_LANGUAGES = sorted(list(LANGUAGES_DECADES.keys()))
 
-FRENCH_FRENCH_LIKE = ("fr_FR", "fr_CA")
+# 'soixante-dix', 'quatre-vingt-dix', etc.
+FRENCH_FRENCH_LIKE = ("fr_CA", "fr_FR")
 
 # Long and short scales
 # Échelle longue (-illion) et échelle courte (-illiard)
