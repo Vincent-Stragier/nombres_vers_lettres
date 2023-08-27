@@ -80,7 +80,7 @@ def main():
         help=(
             "The gender to use for the conversion "
             f"({feminine} or {masculine}), default is masculine "
-            "(only has an effect on cardinal and ordinal_nominal modes))"
+            "(only has an effect on cardinal and ordinal_nominal modes)"
         ),
         type=str,
         default=None,
