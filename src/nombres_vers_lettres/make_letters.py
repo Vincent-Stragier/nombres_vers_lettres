@@ -614,25 +614,35 @@ def float_to_letters(
 
 def make_letters(
     number: float | int | str,
-    mode: str = "ordinal",
+    mode: str = "cardinal",
     gender: str = "masculin",
     plural: bool = False,
     language: str = "fr_BE",
-    post_1990_orthographe: bool = False,
+    post_1990_orthographe: bool = True,
+    use_non_breaking_spaces: bool = True,
 ) -> str:
     """Convert a number to letters.
 
     Args:
         number (float | int | str): The number to convert.
+        gender (str): For ordinal_nominal and cardinal_nominal. If 'feminine',
+        the number will be feminine, if 'masculine',
+        the number will be masculine.
+        plural (bool): For ordinal_nominal and cardinal_nominal. If True,
+        the number will be plural.
         mode (str, optional): The mode to use. Defaults to "ordinal".
         language (str, optional): The language to use. Defaults to "fr_BE".
         post_1990_orthographe (bool, optional): If True, use tiret with "et",
         etc.
-        Defaults to False.
+        Defaults to True.
+        use_non_breaking_spaces (bool, optional): If True,
+        use non-breaking spaces.
 
     Returns:
         str: The number in letters.
     """
+    space = " " if use_non_breaking_spaces else " "
+
     if mode in ("cardinal", "cardinal_nominal"):
         # un, deux, trois virgule cinq
         return float_to_letters(
@@ -642,7 +652,7 @@ def make_letters(
             decimal_rank=True,
             post_1990_orthographe=post_1990_orthographe,
             language=language,
-        )
+        ).replace(" ", space)
 
     if isinstance(number, float):
         if number % 1 == 0:
@@ -660,7 +670,7 @@ def make_letters(
             ordinal=True,
             post_1990_orthographe=post_1990_orthographe,
             language=language,
-        )
+        ).replace(" ", space)
 
         return ordinal_adjectival
 
@@ -674,7 +684,7 @@ def make_letters(
             ),
             gender=gender,
             plural=plural,
-        )
+        ).replace(" ", space)
 
     if mode in CURRENCY_FORMS_FR_CODES:
         return make_currency(
@@ -682,6 +692,6 @@ def make_letters(
             currency=mode,
             post_1990_orthographe=post_1990_orthographe,
             language=language,
-        )
+        ).replace(" ", space)
 
     raise ValueError(f"Invalid mode {mode = }")

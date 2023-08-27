@@ -124,6 +124,7 @@ TEST_DATA = [
         "letters": "trente et un",
         "mode": "cardinal_nominal",
         "language": "fr_BE",
+        "post_1990_orthographe": False,
     },
     {
         "number": "51",
@@ -224,66 +225,77 @@ TEST_DATA = [
         "letters": "cent vingt-huit",
         "mode": "cardinal_nominal",
         "language": "fr_BE",
+        "post_1990_orthographe": False,
     },
     {
         "number": "180",
         "letters": "cent quatre-vingts",
         "mode": "cardinal",
         "language": "fr_BE",
+        "post_1990_orthographe": False,
     },
     {
         "number": "183",
         "letters": "cent quatre-vingt-trois",
         "mode": "cardinal",
         "language": "fr_BE",
+        "post_1990_orthographe": False,
     },
     {
         "number": "200",
         "letters": "deux cents",
         "mode": "cardinal_nominal",
         "language": "fr_BE",
+        "post_1990_orthographe": False,
     },
     {
         "number": "200",
         "letters": "deux cent",
         "mode": "ordinal_adjectival",
         "language": "fr_BE",
+        "post_1990_orthographe": False,
     },
     {
         "number": "200",
         "letters": "deux centième",
         "mode": "ordinal_nominal",
         "language": "fr_BE",
+        "post_1990_orthographe": False,
     },
     {
         "number": "3300",
         "letters": "trois mille trois cents",
         "mode": "cardinal_nominal",
         "language": "fr_BE",
+        "post_1990_orthographe": False,
     },
     {
         "number": "420,69",
         "letters": "quatre cent vingt euros et soixante-neuf cents",
         "mode": "EUR",
         "language": "fr_BE",
+        "post_1990_orthographe": False,
     },
     {
         "number": "777",
         "letters": "sept cent septante-sept",
         "mode": "cardinal_nominal",
         "language": "fr_BE",
+        "post_1990_orthographe": False,
     },
     {
         "number": "851",
         "letters": "huit cent cinquante et un",
         "mode": "cardinal_nominal",
         "language": "fr_FR",
+        "post_1990_orthographe": False,
     },
     {
         "number": "1000",
         "letters": "mille",
         "mode": "cardinal_nominal",
         "language": "fr_BE",
+        "post_1990_orthographe": False,
     },
     {
         "number": "1001",
@@ -305,6 +317,7 @@ TEST_DATA = [
         "letters": "deux mille",
         "mode": "cardinal_nominal",
         "language": "fr_BE",
+        "post_1990_orthographe": False,
     },
     {
         "number": 2000,
@@ -318,6 +331,7 @@ TEST_DATA = [
         "letters": "quatre-vingt mille",
         "mode": "cardinal_nominal",
         "language": "fr_BE",
+        "post_1990_orthographe": False,
     },
     {
         "number": "80000",
@@ -336,6 +350,15 @@ TEST_DATA = [
     },
     {
         "number": "1000001",
+        "letters": "un million une",
+        "gender": "feminine",
+        "mode": "cardinal_nominal",
+        "language": "fr_BE",
+        "post_1990_orthographe": False,
+        "use_non_breaking_spaces": False,
+    },
+    {
+        "number": "1000001",
         "letters": "un-million-unes",
         "gender": "feminine",
         "plural": True,
@@ -348,12 +371,14 @@ TEST_DATA = [
         "letters": "quatre-vingts millions",
         "mode": "cardinal_nominal",
         "language": "fr_BE",
+        "post_1990_orthographe": False,
     },
     {
         "number": "80008000",
         "letters": "quatre-vingts millions huit mille",
         "mode": "cardinal_nominal",
         "language": "fr_BE",
+        "post_1990_orthographe": False,
     },
     {
         "number": "80008000",
@@ -367,6 +392,7 @@ TEST_DATA = [
         "letters": "deux milliards",
         "mode": "cardinal_nominal",
         "language": "fr_BE",
+        "post_1990_orthographe": False,
     },
     # The biggest number that can be written in French
     {
@@ -419,6 +445,7 @@ TEST_DATA = [
         "letters": "cinquante et un",
         "mode": "cardinal_nominal",
         "language": "fr_FR",
+        "post_1990_orthographe": False,
     },
     {
         "number": "61",
@@ -466,12 +493,14 @@ TEST_DATA = [
         "letters": "sept cent soixante-dix-sept",
         "mode": "cardinal_nominal",
         "language": "fr_FR",
+        "post_1990_orthographe": False,
     },
     {
         "number": "851",
         "letters": "huit cent cinquante et un",
         "mode": "cardinal_nominal",
         "language": "fr_FR",
+        "post_1990_orthographe": False,
     },
     {
         "number": "1000",

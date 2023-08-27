@@ -15,9 +15,53 @@ python -m pip install git+https://github.com/Vincent-Stragier/nombres_vers_lettr
 It is better to have your number in strings, this avoids conversion error between `int` or `float` and strings (see [floating point precision](https://docs.python.org/3/tutorial/floatingpoint.html) for more details).
 
 ```python
-from nombres_vers_lettres import make_letters
+import nombres_vers_lettres as nvl
+from nombres_vers_lettres import constants
 
-# TODO: add examples
+# List available languages
+print(f"{constants.AVAILABLE_LANGUAGES = }")
+
+# List available currencies
+print(f"{constants.CURRENCY_FORMS_FR_CODES = }")
+
+# Print the number 42 in French (cardinal mode, new orthographe)
+# Default language is fr_BE
+cardinal_42 = nvl.make_letters(
+    42, language="fr_FR", post_1990_orthographe=True
+)
+
+print(f"{cardinal_42 = }")
+
+# Print 42e in French (cardinal mode, new orthographe)
+ordinal_nominal_42 = nvl.make_letters(
+    42, language="fr_FR", mode="ordinal_nominal", post_1990_orthographe=True
+)
+
+print(f"{ordinal_nominal_42 = }")
+
+# Print €420,69 in French (new orthographe)
+currency_420_69 = nvl.make_letters(
+    "420,69",
+    language="fr_FR",
+    mode="EUR",
+    post_1990_orthographe=True,
+    # By default, non-breaking spaces are used
+    use_non_breaking_spaces=False,
+)
+
+print(f"{currency_420_69 = }")
+
+# Write 1st feminine plural
+ordinal_nominal_1st_f_p = nvl.make_letters(
+    "1",
+    language="fr_FR",
+    mode="ordinal_nominal",
+    gender="feminine",
+    plural=True,
+    post_1990_orthographe=True,
+)
+print(f"{ordinal_nominal_1st_f_p = }")
+
 ```
 
 ### Script usage
