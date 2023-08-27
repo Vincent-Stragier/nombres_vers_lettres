@@ -293,6 +293,14 @@ TEST_DATA = [
         "post_1990_orthographe": True,
     },
     {
+        "number": "1001",
+        "letters": "mille-une",
+        "gender": "feminine",
+        "mode": "cardinal_nominal",
+        "language": "fr_BE",
+        "post_1990_orthographe": True,
+    },
+    {
         "number": 2000,
         "letters": "deux mille",
         "mode": "cardinal_nominal",
@@ -314,6 +322,23 @@ TEST_DATA = [
     {
         "number": "80000",
         "letters": "quatre-vingt-mille",
+        "mode": "cardinal_nominal",
+        "language": "fr_BE",
+        "post_1990_orthographe": True,
+    },
+    {
+        "number": "1000001",
+        "letters": "un-million-une",
+        "gender": "feminine",
+        "mode": "cardinal_nominal",
+        "language": "fr_BE",
+        "post_1990_orthographe": True,
+    },
+    {
+        "number": "1000001",
+        "letters": "un-million-unes",
+        "gender": "feminine",
+        "plural": True,
         "mode": "cardinal_nominal",
         "language": "fr_BE",
         "post_1990_orthographe": True,

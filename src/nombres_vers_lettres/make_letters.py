@@ -373,6 +373,8 @@ def positive_integer_under_one_thousand(
     # Form the part under 100 (xx)
     under_hundred_part_str = positive_integer_up_to_one_hundred(
         number % 100,
+        gender=gender,
+        plural=plural,
         ordinal=ordinal,
         post_1990_orthographe=post_1990_orthographe,
         language=language,
@@ -444,7 +446,10 @@ def integer_to_letters(
     # Check if the number is negative
     if number_int < 0:
         return "moins " + integer_to_letters(
-            number_str.replace("-", ""), language=language
+            number_str.replace("-", ""),
+            language=language,
+            gender=gender,
+            plural=plural,
         )
 
     # We already have a function for numbers under 1000
@@ -528,6 +533,8 @@ def integer_to_letters(
         else:
             group_str = positive_integer_under_one_thousand(
                 int(group),
+                gender=gender if group_rank == 0 else "masculin",
+                plural=plural if group_rank == 0 else False,
                 ordinal=use_ordinal,
                 post_1990_orthographe=post_1990_orthographe,
                 language=language,
