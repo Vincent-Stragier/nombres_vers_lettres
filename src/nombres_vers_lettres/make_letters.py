@@ -599,25 +599,15 @@ def float_to_letters(
 
     number_str = exact_number.split(".")
     integer_part = number_str[0]
+    decimal_part = number_str[1] if len(number_str) > 1 else ""
 
     # If the number is an integer, we don't need to convert the decimal part
-    if len(number_str) == 1:
+    if decimal_part.replace("0", "") == "":
         return integer_to_letters(
             integer_part,
             gender=gender,
             plural=plural,
             decimal_rank=decimal_rank,
-            post_1990_orthographe=post_1990_orthographe,
-            language=language,
-        )
-
-    decimal_part = number_str[1]
-
-    # It's not a decimal number, we return the integer part alone
-    if decimal_part.replace("0", "") == "":
-        return integer_to_letters(
-            integer_part,
-            ordinal=False,
             post_1990_orthographe=post_1990_orthographe,
             language=language,
         )
@@ -685,6 +675,7 @@ def make_letters(
     if isinstance(number, float):
         if number % 1 == 0:
             number = int(number)
+
         else:
             raise ValueError(
                 "Invalid number: float number must be an integer "
