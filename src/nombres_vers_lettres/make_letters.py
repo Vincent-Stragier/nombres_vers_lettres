@@ -187,8 +187,13 @@ def big_number_from_rank(rank: int) -> str:
     if rank < 0:
         raise ValueError(f"Number must be positive (received {rank})")
 
+    # _rank_position = rank // 63
+    # _rank = rank % 63
+    # print(f"rank: {_rank}, _rank_position: {_rank_position}")
+
     try:
         return BIG_NUMBERS_BY_RANK[rank]
+
     except KeyError as exception:
         traceback.print_exc()
         raise ValueError(
@@ -208,10 +213,7 @@ def decimal_from_rank(rank: int) -> str:
     Returns:
         str: The decimal number.
     """
-    if rank < 0:
-        raise ValueError(f"Number must be positive (received {rank})")
-
-    return make_ordinal(BIG_NUMBERS_BY_RANK.get(rank, "ERROR_NO_RANK_FOUND"))
+    return make_ordinal(big_number_from_rank(rank))
 
 
 def make_ordinal(
@@ -480,6 +482,8 @@ def integer_to_letters(
 
     # Compute "rank"
     rank = len(number_str) // 3 * 3
+
+    # print(rank)
 
     if len(number_str) % 3:
         rank += 3
