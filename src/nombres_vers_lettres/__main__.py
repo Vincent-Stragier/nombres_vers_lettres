@@ -134,7 +134,13 @@ def main():
         default="fr_BE",
     )
 
-    args = parser.parse_args()
+    argv = sys.argv[1:]
+
+    if len(argv) > 0:
+        # The last argument is the number to convert
+        argv[-1] = argv[-1].replace(",", ".")
+
+    args = parser.parse_args(argv)
 
     # Parse mode
     if args.mode is not None:
@@ -162,6 +168,7 @@ def main():
                 f"Gender must be either feminine ({feminine})"
                 f" or masculine ({masculine})"
             )
+
     elif args.feminine is not None:
         selected_gender = "feminine"
 
