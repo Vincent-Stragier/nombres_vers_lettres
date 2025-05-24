@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """This modules aims to convert numbers to letters in French.
 
 Interesting links:
@@ -6,6 +5,7 @@ Interesting links:
 https://fr.wikipedia.org/wiki/Noms_des_grands_nombres
 https://fr.wikipedia.org/wiki/Nombres_en_fran%C3%A7ais
 """
+
 import re
 import traceback
 
@@ -303,10 +303,10 @@ def positive_integer_up_to_one_hundred(
     if number == 80 and decades[80] == "quatre-vingt" and ordinal is False:
         return decades[number] + ("s" if decades[number] else "")
 
-    UN = "une" if gender in VALID_FEMININE and ordinal is False else "un"
+    un = "une" if gender in VALID_FEMININE and ordinal is False else "un"
 
     if number == 1:
-        return UN + "s" if plural else UN
+        return un + "s" if plural else un
 
     # Directly lookup decades
     if number in (NUMBERS | decades):
@@ -332,12 +332,12 @@ def positive_integer_up_to_one_hundred(
 
     if number % 10 == 1:
         if number == 81 and decades[80] == "quatre-vingt":
-            return f"quatre-vingt-{UN}"
+            return f"quatre-vingt-{un}"
 
         if post_1990_orthographe:
-            return decades[number - 1] + f"-et-{UN}"
+            return decades[number - 1] + f"-et-{un}"
 
-        return decades[number - 1] + f" et {UN}"
+        return decades[number - 1] + f" et {un}"
 
     return decades[number - number % 10] + "-" + NUMBERS[number % 10]
 
@@ -608,6 +608,15 @@ def float_to_letters(
         )
 
     decimal_part = number_str[1]
+
+    # It's not a decimal number, we return the integer part alone
+    if decimal_part.replace("0", "") == "":
+        return integer_to_letters(
+            integer_part,
+            ordinal=False,
+            post_1990_orthographe=post_1990_orthographe,
+            language=language,
+        )
 
     return (
         integer_to_letters(

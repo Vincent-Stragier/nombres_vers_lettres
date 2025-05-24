@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Constants used in the application."""
 
 CURRENCY_FORMS_FR = {

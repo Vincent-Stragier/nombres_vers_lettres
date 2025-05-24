@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
 """Main entry point for the application when run with the -m switch."""
+
 import argparse
 import os
 import sys
@@ -30,8 +30,7 @@ def main():
         "--mode",
         type=str,
         help=(
-            "The mode to use for the conversion "
-            "(nominal, cardinal or ordinal)"
+            "The mode to use for the conversion (nominal, cardinal or ordinal)"
         ),
         default=None,
     )
@@ -89,14 +88,14 @@ def main():
         "--masculine",
         "-m",
         action="store_true",
-        help="Convert the number to masculine letters (e.g. 'un' -> 'un')",
+        help="Convert the number to masculine letters (e.g., 'un' -> 'un')",
         default=None,
     )
     group.add_argument(
         "--feminine",
         "-f",
         action="store_true",
-        help="Convert the number to feminine letters (e.g. 'un' -> 'une')",
+        help="Convert the number to feminine letters (e.g., 'un' -> 'une')",
         default=None,
     )
 
@@ -106,7 +105,7 @@ def main():
         "-p",
         action="store_true",
         help=(
-            "Convert the number to plural letters (e.g. 'un' -> 'uns'), "
+            "Convert the number to plural letters (e.g., 'un' -> 'uns'), "
             "only has an effect on cardinal and ordinal_nominal modes"
         ),
         default=None,
@@ -117,7 +116,7 @@ def main():
         "--post_1990_orthographe",
         "-t",
         action="store_true",
-        help="Use the tiret character everywhere (e.g. 'vingt-et-un')",
+        help="Use the tiret character everywhere (e.g., 'vingt-et-un')",
         default=None,
     )
 
@@ -130,7 +129,7 @@ def main():
         type=str,
         help=(
             "The language code to use for the conversion "
-            f"(e.g. {available_languages})"
+            f"(e.g., {available_languages})"
         ),
         default="fr_BE",
     )

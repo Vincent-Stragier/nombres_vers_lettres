@@ -95,13 +95,13 @@ options:
   --gender GENDER, -g GENDER
                         The gender to use for the conversion (feminine, féminin, feminin, f or masculine, masculin, m), default is masculine
                         (only has an effect on cardinal and ordinal_nominal modes)
-  --masculine, -m       Convert the number to masculine letters (e.g. 'un' -> 'un')
-  --feminine, -f        Convert the number to feminine letters (e.g. 'un' -> 'une')
-  --plural, -p          Convert the number to plural letters (e.g. 'un' -> 'uns'), only has an effect on cardinal and ordinal_nominal modes
+  --masculine, -m       Convert the number to masculine letters (e.g., 'un' -> 'un')
+  --feminine, -f        Convert the number to feminine letters (e.g., 'un' -> 'une')
+  --plural, -p          Convert the number to plural letters (e.g., 'un' -> 'uns'), only has an effect on cardinal and ordinal_nominal modes
   --post_1990_orthographe, -t
-                        Use the tiret character everywhere (e.g. 'vingt-et-un')
+                        Use the tiret character everywhere (e.g., 'vingt-et-un')
   --language LANGUAGE, -l LANGUAGE
-                        The language code to use for the conversion (e.g. fr_BE, fr_CD, fr_FR, fr_CA, fr_CH, fr_IT)
+                        The language code to use for the conversion (e.g., fr_BE, fr_CD, fr_FR, fr_CA, fr_CH, fr_IT)
 ```
 
 ## How to contribute

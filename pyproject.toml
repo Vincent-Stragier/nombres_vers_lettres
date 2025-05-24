@@ -23,3 +23,27 @@ exclude = '''
     | dist
 )/
 '''
+
+[tool.ruff]
+builtins = ["_"]
+# cache-dir = "~/.cache/ruff"
+exclude = [".venv"]
+line-length = 79
+fix = true
+indent-width = 4
+respect-gitignore = false
+show-fixes = true
+src = ["src"]
+target-version = "py312"
+unsafe-fixes = false
+
+[tool.ruff.analyze]
+detect-string-imports = true
+
+[tool.ruff.format]
+# Enable reformatting of code snippets in docstrings.
+docstring-code-format = true
+docstring-code-line-length = 79
+# Enable reformatting of code snippets in comments.
+indent-style = "space"
+line-ending = "lf"

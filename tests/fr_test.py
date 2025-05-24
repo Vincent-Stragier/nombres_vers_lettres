@@ -1,10 +1,11 @@
-# -*- coding: utf-8 -*-
 r"""Test of the __main__ module.
 
 Run the test with:
 pytest -v tests\fr_test.py
 """
+
 import pytest
+
 from nombres_vers_lettres import make_letters
 
 TEST_DATA = [
@@ -32,6 +33,20 @@ TEST_DATA = [
     },
     {
         "number": "0",
+        "letters": "zéro",
+        "mode": "cardinal_nominal",
+        "language": "fr_BE",
+        "post_1990_orthographe": False,
+    },
+    {
+        "number": "0,0",
+        "letters": "zéro",
+        "mode": "cardinal_nominal",
+        "language": "fr_BE",
+        "post_1990_orthographe": False,
+    },
+    {
+        "number": "0,000",
         "letters": "zéro",
         "mode": "cardinal_nominal",
         "language": "fr_BE",

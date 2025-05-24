@@ -5,16 +5,17 @@
 # Run `pre-commit autoupdate` to automatically update this file
 # Run `pre-commit run --a` to run all hooks on all files
 
-# You may want to exclude some files using regex
-exclude: (?x)^(.*\/.vscode\/.*|.vscode\/settings.json)$
+# You may want to exclude some files using regex, also exclude some directories
+# src/webapp/static/css/bulma and src/webapp/static/fontawesome
+exclude: (?x)^(.*\/.vscode\/.*|.vscode\/settings.json|src/webapp/static/css/bulma/.*|src/webapp/static/fontawesome/.*|src/webapp/static/js/plotly-strict.min.js)$
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v5.0.0
     hooks:
       - id: check-added-large-files
       - id: check-ast
-      - id: check-byte-order-marker
+      - id: fix-byte-order-marker
       - id: check-builtin-literals
       - id: check-case-conflict
       - id: check-docstring-first
@@ -32,7 +33,7 @@ repos:
       # - id: double-quote-string-fixer
       - id: end-of-file-fixer
       - id: file-contents-sorter
-      - id: fix-encoding-pragma
+      # - id: fix-encoding-pragma
       - id: forbid-new-submodules
       - id: mixed-line-ending
       - id: name-tests-test
@@ -51,14 +52,14 @@ repos:
     hooks:
       - id: isort
 
-  - repo: https://github.com/psf/black
-    rev: 23.7.0
-    hooks:
-      - id: black
-        language_version: python3.10
+  # - repo: https://github.com/psf/black
+  #   rev: 25.1.0
+  #   hooks:
+  #     - id: black
+  #       language_version: python3.12
 
   - repo: https://github.com/pycqa/flake8
-    rev: 6.1.0
+    rev: 7.2.0
     hooks:
       - id: flake8
 
@@ -86,9 +87,19 @@ repos:
   #     - id: pyupgrade
 
   - repo: https://github.com/asottile/setup-cfg-fmt
-    rev: v2.4.0
+    rev: v2.8.0
     hooks:
       - id: setup-cfg-fmt
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    # Ruff version.
+    rev: v0.11.11
+    hooks:
+      # Run the linter.
+      - id: ruff-check
+        args: [--select, I, --fix]
+      # Run the formatter.
+      - id: ruff-format
 
   - repo: local
     hooks:
@@ -99,11 +110,15 @@ repos:
         pass_filenames: false
         always_run: true
 
-  - repo: local
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.19.1
     hooks:
-      - id: coverage-check
-        name: coverage-check (pytest)
-        entry: coverage run -m pytest
-        language: system
-        pass_filenames: false
-        always_run: true
+      - id: pyupgrade
+  # - repo: local
+  #   hooks:
+  #     - id: coverage-check
+  #       name: coverage-check (pytest)
+  #       entry: coverage run -m pytest
+  #       language: system
+  #       pass_filenames: false
+  #       always_run: true
