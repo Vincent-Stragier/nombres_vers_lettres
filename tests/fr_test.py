@@ -4,8 +4,7 @@ Run the test with:
 pytest -v tests\fr_test.py
 """
 
-import pytest
-
+import pytest  # type: ignore[import-not-found]
 from nombres_vers_lettres import make_letters
 
 TEST_DATA = [
