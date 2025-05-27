@@ -1,9 +1,15 @@
 [build-system]
 requires = [
+    "GitPython>=3.1.44",
     "setuptools>=65.5.1",
     "wheel",
 ]
 build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "nombres-vers-lettres"
+dynamic = ["version", "description", "dependencies", "scripts", "urls", "readme", "requires-python", "authors", "classifiers"]
 
 [tool.black]
 verbose = true
